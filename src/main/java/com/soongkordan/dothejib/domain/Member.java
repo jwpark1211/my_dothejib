@@ -18,4 +18,10 @@ public class Member {
 
     private String password;
 
+    public static Member createMember(String email, String password){
+        Member member = new Member();
+        member.email = email;
+        member.password = password;
+        return member;
+    }
 }
