@@ -35,7 +35,7 @@ public class MemberController {
     ) {
         Member member = Member.createMember(email, password);
         memberService.join(member);
-        // TODO: Retrun 형식 관련 구현 필요
+        // TODO: Return 형식 관련 구현 필요
         return true;
     }
 
