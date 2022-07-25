@@ -37,7 +37,6 @@ public class MemberController {
         return new CommonDTO.IdResponse(savedId);
     }
 
-    //TODO: 로그인 HTTP 상태 코드 맞는지 확인
     //TODO: Security 추가
     /*로그인*/
     @PostMapping(value = "/members/login", produces = APPLICATION_JSON_VALUE)
@@ -56,12 +55,10 @@ public class MemberController {
                     .body(new ErrorResponse(
                             "회원 정보가 올바르지 않습니다. password 정보를 확인해주세요.","401"));
         }
-        return ResponseEntity.ok()
-                .body(new CommonResponse<CommonDTO.StringResponse>
-                (new CommonDTO.StringResponse("LOGIN SUCCESS")));
+        return ResponseEntity.noContent().build(); //204 반환
     }
 
-    //TODO: member가 한 명도 없는 경우에 exception 처리를 해야 하는지 확인
+    //TODO: member가 한 명도 없는 경우에 exception 처리를 해야 하는지?
     /*모든 멤버 조회*/
     @GetMapping(path = "/members", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findAllMembers(){

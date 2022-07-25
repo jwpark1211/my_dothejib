@@ -17,7 +17,6 @@ public class Member {
     private Long id;
 
     private String email;
-
     private String password;
 
     public static Member createMember(String email, String password){
@@ -26,5 +25,4 @@ public class Member {
         member.password = password;
         return member;
     }
-
 }

@@ -12,10 +12,4 @@ public class CommonDTO {
         private Long id;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class StringResponse{
-        private String response;
-    }
-
 }
