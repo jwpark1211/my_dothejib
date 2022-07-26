@@ -24,7 +24,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    // TODO: REST Api Controller test code 작성 학습 및 적용 필요
     // TODO: 로그인 / 회원가입 develop
 
     /*회원가입*/
@@ -50,7 +49,7 @@ public class MemberController {
         if(!member.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse(
-                            "일치하는 회원 정보가 없습니다. email 정보를 확인해주세요."));
+                            "일치하는 회원 정보가 없습니다. email 정보를 확인해주세요.")); //404
         }
         if(!member.get().getPassword().equals(request.getPassword())){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -61,7 +60,6 @@ public class MemberController {
     }
 
     /*모든 멤버 조회*/
-    //TODO: member가 한 명도 없는 경우에 exception 처리를 해야 하는지?
     @GetMapping(path = "/members", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findAllMembers(){
         List<Member> members = memberService.findMembers();

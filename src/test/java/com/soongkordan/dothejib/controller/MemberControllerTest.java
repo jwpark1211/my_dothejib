@@ -30,12 +30,8 @@ import java.util.Optional;
 public class MemberControllerTest {
 
     private MockMvc mvc;
-
-    @MockBean
-    private MemberService memberService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockBean private MemberService memberService;
+    @Autowired private ObjectMapper objectMapper;
 
     List<Member> members = new ArrayList<>();
      Optional<Member> member = Optional.of(Member.createMember("email@google.com", "password"));
@@ -65,7 +61,7 @@ public class MemberControllerTest {
         given(memberService.findMembers()).willReturn(members);
 
         //when
-        final ResultActions actions = mvc.perform(get("/members"));
+        ResultActions actions = mvc.perform(get("/members"));
 
         //then
         actions
@@ -82,7 +78,7 @@ public class MemberControllerTest {
         given(memberService.findOne(any())).willReturn(member);
 
         //when
-        final ResultActions actions = mvc.perform(get("/members/1"));
+        ResultActions actions = mvc.perform(get("/members/1"));
 
         //then
         actions
@@ -100,7 +96,7 @@ public class MemberControllerTest {
         given(memberService.findOne(any())).willReturn(nullMember);
 
         //when
-        final ResultActions actions = mvc.perform(get("/members/1"));
+        ResultActions actions = mvc.perform(get("/members/1"));
 
         //then
         actions
