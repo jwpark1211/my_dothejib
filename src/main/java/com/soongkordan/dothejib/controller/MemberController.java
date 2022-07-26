@@ -25,8 +25,10 @@ public class MemberController {
     private final MemberService memberService;
 
     // TODO: REST Api Controller test code 작성 학습 및 적용 필요
-    // TODO: 회원가입 아이디, 비밀번호 포맷 결정 후 예외처리 필요
+    // TODO: 로그인 / 회원가입 develop
+
     /*회원가입*/
+    // TODO: 회원가입 아이디, 비밀번호 포맷 결정 후 예외처리 필요
     @PostMapping(path = "/members/new",produces = APPLICATION_JSON_VALUE)
     public CommonDTO.IdResponse save(
             @RequestBody @Valid MemberDTO.Request request
@@ -37,8 +39,8 @@ public class MemberController {
         return new CommonDTO.IdResponse(savedId);
     }
 
-    //TODO: Security 추가
     /*로그인*/
+    //TODO: Security 추가
     @PostMapping(value = "/members/login", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> login(
             @RequestBody @Valid MemberDTO.Request request
@@ -58,8 +60,8 @@ public class MemberController {
         return ResponseEntity.noContent().build(); //204 반환
     }
 
-    //TODO: member가 한 명도 없는 경우에 exception 처리를 해야 하는지?
     /*모든 멤버 조회*/
+    //TODO: member가 한 명도 없는 경우에 exception 처리를 해야 하는지?
     @GetMapping(path = "/members", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findAllMembers(){
         List<Member> members = memberService.findMembers();
