@@ -24,6 +24,8 @@ public class FamilyController {
 
     private final FamilyService familyService;
 
+    /*가족 생성(저장)*/
+    //Todo: 가족이 생성됨과 동시에 가족 구성원(Host)객체도 같이 생성 및 저장
     @PostMapping(path = "/family/new", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> save(
             @RequestBody @Valid FamilyDTO.Request request
@@ -36,6 +38,7 @@ public class FamilyController {
                        new CommonDTO.IdResponse(savedId)));
     }
 
+    /*가족 정보(이름) 수정*/
     @PatchMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyInfo(
             @PathVariable("id") Long id,
@@ -49,6 +52,7 @@ public class FamilyController {
         return ResponseEntity.noContent().build(); //204 반환
     }
 
+    /*Id로 가족 정보 조회*/
     @GetMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyInfo(
             @PathVariable("id") Long id
