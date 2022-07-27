@@ -19,11 +19,16 @@ public class familyServiceTest {
 
     @Test
     void modifyFamilyInfo(){
+
+        //given
         Family family = Family.createFamily("name");
         familyService.save(family);
+
+        //when
         Optional<Family> findFamily = familyService.findOne(family.getId());
         findFamily.get().modifyName("modify");
 
+        //then
         assertEquals("modify",findFamily.get().getName());
     }
 }
