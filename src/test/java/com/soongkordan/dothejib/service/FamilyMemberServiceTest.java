@@ -22,7 +22,7 @@ public class FamilyMemberServiceTest {
     @Autowired MemberService memberService;
 
     @Test
-    void save(){
+    void 가족구성원_저장(){
         //given
         Member member = getMember("email@email.com");
         Family family = getFamily("name");
@@ -36,7 +36,7 @@ public class FamilyMemberServiceTest {
     }
 
     @Test
-    void findByFamilyId(){
+    void 가족아이디로_가족구성원_조회(){
         //given
         Member member1 = getMember("email1@email.com");
         Member member2 = getMember("email2@email.com");
@@ -53,7 +53,24 @@ public class FamilyMemberServiceTest {
     }
 
     @Test
-    void findByFamilyIdAndMemberId(){
+    void 유저아이디로_가족구성원_조회(){
+        //given
+        Member member1 = getMember("email1@email.com");
+        Member member2 = getMember("email2@email.com");
+        Family family1 = getFamily("name1");
+        Family family2 = getFamily("name2");
+        FamilyMember familyMember1 = getFamilyMember(member1, family1, "nameFm1");
+        FamilyMember familyMember2 = getFamilyMember(member2, family1, "nameFm2");
+
+        //when
+        List<FamilyMember> familyMembers = familyMemberService.findByMemberId(member2.getId());
+
+        //then
+        assertEquals(1,familyMembers.size());
+    }
+
+    @Test
+    void 유저아이디와_가족아이디로_가족구성원_조회(){
         //given
         Member member1 = getMember("email1@email.com");
         Member member2 = getMember("email2@email.com");

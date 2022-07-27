@@ -17,8 +17,6 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
-    @Autowired
-    MemberRepository memberRepository;
 
     @Test
     void 회원가입_단일회원검색() {
@@ -29,7 +27,7 @@ class MemberServiceTest {
         Long savedId = memberService.join(member);
 
         // then
-        assertEquals(member, memberService.findOne(savedId));
+        assertEquals(member, memberService.findOne(savedId).get());
     }
 
     @Test
@@ -47,5 +45,30 @@ class MemberServiceTest {
 
         // then
         assertEquals(3, members.size());
+    }
+
+    @Test
+    void 회원저장(){
+        //given
+        Member member1 = Member.createMember("email@google.com","password");
+
+        //when
+        Long savedId = memberService.join(member1);
+        Member findMember = memberService.findOne(savedId).get();
+
+        //then
+        assertEquals(findMember,member1);
+    }
+
+    @Test
+    void 이메일로_회원_조회(){
+        // given
+        Member member = Member.createMember("test@google.com", "password");
+
+        // when
+        Long savedId = memberService.join(member);
+
+        // then
+        assertEquals(member, memberService.findByEmail(member.getEmail()).get());
     }
 }

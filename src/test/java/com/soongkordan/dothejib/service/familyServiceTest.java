@@ -18,14 +18,39 @@ public class familyServiceTest {
     @Autowired FamilyService familyService;
 
     @Test
-    void modifyFamilyInfo(){
-
+    void 가족생성and가족단일검색(){
         //given
         Family family = Family.createFamily("name");
-        familyService.save(family);
+        Long savedId = familyService.save(family);
 
         //when
-        Optional<Family> findFamily = familyService.findOne(family.getId());
+        Family find = familyService.findOne(savedId).get();
+
+        //then
+        assertEquals(find,family);
+    }
+
+    @Test
+    void 이름으로_가족_조회(){
+        //given
+        Family family = Family.createFamily("name");
+        Long savedId = familyService.save(family);
+
+        //when
+        Family find = familyService.findByName("name").get();
+
+        //then
+        assertEquals(find,family);
+    }
+
+    @Test
+    void 가족정보_수정(){
+        //given
+        Family family = Family.createFamily("name");
+        Long savedId = familyService.save(family);
+
+        //when
+        Optional<Family> findFamily = familyService.findOne(savedId);
         findFamily.get().modifyName("modify");
 
         //then
