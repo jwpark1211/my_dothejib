@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.soongkordan.dothejib.controller.dto.MemberDTO.*;
 import static org.springframework.http.MediaType.*;
 
 @RestController
@@ -24,13 +25,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    // TODO: 로그인 / 회원가입 develop
+    //TODO: 로그인 / 회원가입 develop
 
     /*회원가입*/
-    // TODO: 회원가입 아이디, 비밀번호 포맷 결정 후 예외처리 필요
+    //TODO: 회원가입 아이디, 비밀번호 포맷 결정 후 예외처리 필요
     @PostMapping(path = "/members/new",produces = APPLICATION_JSON_VALUE)
     public CommonDTO.IdResponse save(
-            @RequestBody @Valid MemberDTO.Request request
+            @RequestBody @Valid Request request
     ){
         Member member = Member.createMember(request.getEmail(),request.getPassword());
         Long savedId = memberService.join(member);
@@ -42,7 +43,7 @@ public class MemberController {
     //TODO: Security 추가
     @PostMapping(value = "/members/login", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> login(
-            @RequestBody @Valid MemberDTO.Request request
+            @RequestBody @Valid Request request
     ){
         Optional<Member> member = memberService.findByEmail(request.getEmail());
 
@@ -63,8 +64,8 @@ public class MemberController {
     @GetMapping(path = "/members", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findAllMembers(){
         List<Member> members = memberService.findMembers();
-        List<MemberDTO.Response> memberResponses = members.stream()
-                .map(m -> new MemberDTO.Response(m.getId(),m.getEmail()))
+        List<Response> memberResponses = members.stream()
+                .map(m -> new Response(m.getId(),m.getEmail()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok()
@@ -82,7 +83,7 @@ public class MemberController {
                     .body(new ErrorResponse("일치하는 회원 정보가 없습니다. 사용자 id를 확인해주세요."));
         }
         return ResponseEntity.ok().body(
-                new CommonResponse<MemberDTO.Response>
-                        (new MemberDTO.Response(member.get().getId(),member.get().getEmail())));
+                new CommonResponse<Response>
+                        (new Response(member.get().getId(),member.get().getEmail())));
     }
 }

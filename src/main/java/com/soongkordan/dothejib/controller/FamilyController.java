@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import java.util.Optional;
 
+import static com.soongkordan.dothejib.controller.dto.FamilyDTO.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -28,7 +29,7 @@ public class FamilyController {
     //Todo: 가족이 생성됨과 동시에 가족 구성원(Host)객체도 같이 생성 및 저장
     @PostMapping(path = "/family/new", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> save(
-            @RequestBody @Valid FamilyDTO.Request request
+            @RequestBody @Valid Request request
     ){
         Family family = Family.createFamily(request.getName());
         Long savedId = familyService.save(family);
@@ -42,7 +43,7 @@ public class FamilyController {
     @PatchMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyInfo(
             @PathVariable("id") Long id,
-            @RequestBody @Valid FamilyDTO.Request request
+            @RequestBody @Valid Request request
     ){
         Optional<Family> family = familyService.modifyFamilyInfo(id,request.getName());
         if(!family.isPresent()){
@@ -64,8 +65,8 @@ public class FamilyController {
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
         }
         return ResponseEntity.ok().body(
-                new CommonResponse<FamilyDTO.Response>
-                        (new FamilyDTO.Response(
+                new CommonResponse<Response>
+                        (new Response(
                                 family.get().getId(),family.get().getName(),family.get().getCreatedAt())));
     }
 }
