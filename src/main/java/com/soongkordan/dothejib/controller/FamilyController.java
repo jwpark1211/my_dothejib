@@ -26,7 +26,6 @@ public class FamilyController {
     private final FamilyService familyService;
 
     /*가족 생성(저장)*/
-    //Todo: 가족이 생성됨과 동시에 가족 구성원(Host)객체도 같이 생성 및 저장
     @PostMapping(path = "/family/new", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> save(
             @RequestBody @Valid Request request
@@ -36,7 +35,7 @@ public class FamilyController {
 
        return ResponseEntity.ok()
                .body(new CommonResponse<CommonDTO.IdResponse>(
-                       new CommonDTO.IdResponse(savedId)));
+                       new CommonDTO.IdResponse(savedId))); //return : 200 + familyId
     }
 
     /*가족 정보(이름) 수정*/
@@ -47,10 +46,10 @@ public class FamilyController {
     ){
         Optional<Family> family = familyService.modifyFamilyInfo(id,request.getName());
         if(!family.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build(); //201 반환
+        return ResponseEntity.status(HttpStatus.CREATED).build(); //return : 201
     }
 
     /*Id로 가족 정보 조회*/
@@ -61,10 +60,10 @@ public class FamilyController {
         Optional<Family> family = familyService.findOne(id);
 
         if(!family.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
         }
-        return ResponseEntity.ok().body(
+        return ResponseEntity.ok().body( //return: 200 + familyInfo(id/name/createdAt)
                 new CommonResponse<Response>
                         (new Response(
                                 family.get().getId(),family.get().getName(),family.get().getCreatedAt())));

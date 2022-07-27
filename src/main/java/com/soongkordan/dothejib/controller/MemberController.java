@@ -48,16 +48,16 @@ public class MemberController {
         Optional<Member> member = memberService.findByEmail(request.getEmail());
 
         if(!member.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse(
-                            "일치하는 회원 정보가 없습니다. email 정보를 확인해주세요.")); //404
+                            "일치하는 회원 정보가 없습니다. email 정보를 확인해주세요."));
         }
         if(!member.get().getPassword().equals(request.getPassword())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED) //return : 401
                     .body(new ErrorResponse(
                             "회원 정보가 올바르지 않습니다. password 정보를 확인해주세요.","401"));
         }
-        return ResponseEntity.ok().build(); //200 반환
+        return ResponseEntity.ok().build(); //return : 200
     }
 
     /*모든 멤버 조회*/
@@ -68,7 +68,7 @@ public class MemberController {
                 .map(m -> new Response(m.getId(),m.getEmail()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.ok() //return : 200 + memberList(Id/email)
                 .body(new CommonResponse<List>(memberResponses));
     }
 
@@ -77,12 +77,13 @@ public class MemberController {
     public ResponseEntity<? extends BasicResponse> searchById(
             @PathVariable("id") long id
     ){
+        //memberId 존재하는지 확인
         Optional<Member> member = memberService.findOne(id);
         if(!member.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("일치하는 회원 정보가 없습니다. 사용자 id를 확인해주세요."));
         }
-        return ResponseEntity.ok().body(
+        return ResponseEntity.ok().body( //return : 200 + memberInfo(id/email)
                 new CommonResponse<Response>
                         (new Response(member.get().getId(),member.get().getEmail())));
     }
