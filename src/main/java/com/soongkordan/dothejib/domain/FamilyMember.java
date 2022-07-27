@@ -13,15 +13,25 @@ public class FamilyMember {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id")
     private Family family;
 
     private String name;
-
     private String profileImg;
+
+    public static FamilyMember createFamilyMember(
+            Member member, Family family, String name, String profileImg
+    ){
+        FamilyMember familyMember = new FamilyMember();
+        familyMember.member = member;
+        familyMember.family = family;
+        familyMember.name = name;
+        familyMember.profileImg = profileImg;
+        return familyMember;
+    }
 }
