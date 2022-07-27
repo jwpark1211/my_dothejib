@@ -31,6 +31,10 @@ public class FamilyMemberService {
         return familyMemberRepository.findByFamilyId(familyId);
     }
 
+    public List<FamilyMember> findByMemberId(Long memberId){
+         return familyMemberRepository.findByMemberId(memberId);
+    }
+
     public Optional<FamilyMember> findByFamilyIdAndMemberId(Long familyId, Long memberId){
         return familyMemberRepository.findByFamilyIdAndMemberId(familyId,memberId);
     }
