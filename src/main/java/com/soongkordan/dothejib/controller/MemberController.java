@@ -56,7 +56,7 @@ public class MemberController {
                     .body(new ErrorResponse(
                             "회원 정보가 올바르지 않습니다. password 정보를 확인해주세요.","401"));
         }
-        return ResponseEntity.noContent().build(); //204 반환
+        return ResponseEntity.ok().build(); //200 반환
     }
 
     /*모든 멤버 조회*/

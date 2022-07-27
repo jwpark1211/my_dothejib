@@ -49,7 +49,7 @@ public class FamilyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
         }
-        return ResponseEntity.noContent().build(); //204 반환
+        return ResponseEntity.status(HttpStatus.CREATED).build(); //201 반환
     }
 
     /*Id로 가족 정보 조회*/
