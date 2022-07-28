@@ -41,23 +41,24 @@ public class FamilyController {
     /*가족 정보(이름) 수정*/
     @PatchMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyInfo(
-            @PathVariable("id") Long id,
+            @PathVariable("id") Long familyId,
             @RequestBody @Valid Request request
     ){
-        Optional<Family> family = familyService.modifyFamilyInfo(id,request.getName());
+        Optional<Family> family = familyService.findOne(familyId);
         if(!family.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
         }
+        familyService.modifyFamilyInfo(familyId,request.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build(); //return : 201
     }
 
     /*Id로 가족 정보 조회*/
     @GetMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyInfo(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long familyId
     ){
-        Optional<Family> family = familyService.findOne(id);
+        Optional<Family> family = familyService.findOne(familyId);
 
         if(!family.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404

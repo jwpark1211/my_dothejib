@@ -33,9 +33,8 @@ public class FamilyService {
     }
 
     @Transactional
-    public Optional<Family> modifyFamilyInfo(Long familyId, String name){
+    public void modifyFamilyInfo(Long familyId, String name){
         Optional<Family> family = familyRepository.findById(familyId);
         family.get().modifyName(name);
-        return family;
     }
 }

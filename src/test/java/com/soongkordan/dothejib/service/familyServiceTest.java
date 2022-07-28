@@ -50,10 +50,9 @@ public class familyServiceTest {
         Long savedId = familyService.save(family);
 
         //when
-        Optional<Family> findFamily = familyService.findOne(savedId);
-        findFamily.get().modifyName("modify");
+        familyService.modifyFamilyInfo(savedId,"modify");
 
         //then
-        assertEquals("modify",findFamily.get().getName());
+        assertEquals("modify",family.getName());
     }
 }
