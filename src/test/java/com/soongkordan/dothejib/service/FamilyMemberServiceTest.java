@@ -87,6 +87,20 @@ public class FamilyMemberServiceTest {
         assertEquals("nameFm2",find.getName());
     }
 
+    @Test
+    void 가족구성원_정보_수정(){
+        //given
+        Member member1 = getMember("email1@email.com");
+        Family family1 = getFamily("name1");
+        FamilyMember familyMember1 = getFamilyMember(member1, family1, "nameFm1");
+
+        //when
+        familyMemberService.modifyFamilyMemberInfo(familyMember1.getId(),"modify");
+
+        //then
+        assertEquals("modify",familyMember1.getName());
+    }
+
     //=CreateMethod==//
     private Family getFamily(String name) {
         Family family = Family.createFamily(name);

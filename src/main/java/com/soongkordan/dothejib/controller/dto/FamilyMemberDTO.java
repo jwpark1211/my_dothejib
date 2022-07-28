@@ -22,6 +22,12 @@ public class FamilyMemberDTO {
     }
 
     @Getter
+    @Setter
+    public static class ModifyInfoRequest{
+        private String name;
+    }
+
+    @Getter
     @AllArgsConstructor
     public static class Response{
         private Long id;

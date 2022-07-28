@@ -105,4 +105,22 @@ public class FamilyMemberController {
                 .body(new CommonResponse<Response>(
                         new Response(familyMemberId,familyMember.get().getName(),familyMember.get().getProfileImg())));
     }
+
+    /* 가족 구성원 이름 수정 */
+    //TODO: 이미지 수정까지 한 번에 처리?
+    @PatchMapping(path="/familyMember/{id}",produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<? extends BasicResponse> modifyFamilyMemberInfo(
+            @PathVariable("id") Long familyMemberId,
+            @RequestBody ModifyInfoRequest request
+    ){
+        //familyMemberId 존재하는지 확인
+        Optional<FamilyMember> familyMember =
+                familyMemberService.findOne(familyMemberId);
+        if(!familyMember.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
+                    .body(new ErrorResponse("일치하는 가족 구성원 정보가 없습니다. id를 확인해주세요."));
+        }
+        familyMemberService.modifyFamilyMemberInfo(familyMemberId,request.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build(); //return : 201
+    }
 }

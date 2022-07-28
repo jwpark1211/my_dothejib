@@ -34,4 +34,12 @@ public class FamilyMember {
         familyMember.profileImg = profileImg;
         return familyMember;
     }
+
+    public void modifyName(String name){
+        this.name = name;
+    }
+
+    public void modifyProfileImg(String profileImg){
+        this.profileImg = profileImg;
+    }
 }

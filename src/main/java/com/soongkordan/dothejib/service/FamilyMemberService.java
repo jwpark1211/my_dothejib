@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
 import com.soongkordan.dothejib.repository.FamilyMemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,12 @@ public class FamilyMemberService {
 
     public Optional<FamilyMember> findByFamilyIdAndMemberId(Long familyId, Long memberId){
         return familyMemberRepository.findByFamilyIdAndMemberId(familyId,memberId);
+    }
+
+    @Transactional
+    public void modifyFamilyMemberInfo(Long familyMemberId, String name){
+        Optional<FamilyMember> familyMember = familyMemberRepository.findById(familyMemberId);
+        familyMember.get().modifyName(name);
     }
 
     // TODO: 에러 메세지 고쳐야됨...
