@@ -33,4 +33,13 @@ public class Todo {
     private FamilyMember publisher;
 
     private String content;
+
+    public static Todo createTodo(String title, Family family, FamilyMember publisher){
+        Todo todo = new Todo();
+        todo.title = title;
+        todo.family = family;
+        todo.publisher = publisher;
+
+        return todo;
+    }
 }
