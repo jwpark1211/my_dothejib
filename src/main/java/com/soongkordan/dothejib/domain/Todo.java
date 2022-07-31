@@ -20,11 +20,15 @@ public class Todo {
 
     private int difficulty;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_id")
+    private Family family;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "charged_familymember_id")
     private FamilyMember personInCharge;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "published_familymember_id")
     private FamilyMember publisher;
 
