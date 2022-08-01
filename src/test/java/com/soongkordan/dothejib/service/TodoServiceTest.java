@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -43,6 +47,23 @@ public class TodoServiceTest {
     }
 
     @Test
+    void 투두리스트_패밀리아이디_검색() {
+        // given
+        Family family = getFamily("testFam");
+        Member member = getMember("testEmail@test.com");
+        FamilyMember familyMember = getFamilyMember(member, family, "fmName");
+        Todo todo1 = getTodo("testTodo1", family, familyMember);
+        Todo todo2 = getTodo("testTodo2", family, familyMember);
+        Todo todo3 = getTodo("testTodo3", family, familyMember);
+
+        // when
+        List<Todo> foundTodos = todoService.findByFamilyId(family.getId());
+
+        // then
+        assertEquals(foundTodos.size(), 3);
+    }
+
+    @Test
     void 투두리스트_추가_And_삭제() {
         // given
         Family family = getFamily("testFam");
@@ -63,19 +84,21 @@ public class TodoServiceTest {
         familyService.save(family);
         return family;
     }
+
     private Member getMember(String email) {
-        Member member = Member.createMember(email,"password");
+        Member member = Member.createMember(email, "password");
         memberService.join(member);
         return member;
     }
+
     private FamilyMember getFamilyMember(Member member, Family family, String nameFm) {
         FamilyMember familyMember =
-                FamilyMember.createFamilyMember(member, family, nameFm,"profileImg");
+                FamilyMember.createFamilyMember(member, family, nameFm, "profileImg");
         familyMemberService.save(familyMember);
         return familyMember;
     }
 
-    private Todo getTodo(String title, Family family, FamilyMember familyMember){
+    private Todo getTodo(String title, Family family, FamilyMember familyMember) {
         Todo todo = Todo.createTodo(title, family, familyMember);
         todoService.save(todo);
         return todo;

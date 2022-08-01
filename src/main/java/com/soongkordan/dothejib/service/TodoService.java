@@ -1,11 +1,13 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.Todo;
 import com.soongkordan.dothejib.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,10 @@ public class TodoService {
     public Optional<Todo> findOne(Long todoId){
         Optional<Todo> todo = todoRepository.findById(todoId);
         return todo;
+    }
+
+    public List<Todo> findByFamilyId(Long familyId){
+        return todoRepository.findByFamilyId(familyId);
     }
 
     public Long deleteOne(Long todoId){
