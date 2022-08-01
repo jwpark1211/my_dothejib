@@ -64,6 +64,23 @@ public class TodoServiceTest {
     }
 
     @Test
+    void 투두리스트_투두발행자_검색() {
+        // given
+        Family family = getFamily("testFam");
+        Member member = getMember("testEmail@test.com");
+        FamilyMember familyMember = getFamilyMember(member, family, "fmName");
+        Todo todo1 = getTodo("testTodo1", family, familyMember);
+        Todo todo2 = getTodo("testTodo2", family, familyMember);
+        Todo todo3 = getTodo("testTodo3", family, familyMember);
+
+        // when
+        List<Todo> foundTodos = todoService.findByPublisherId(familyMember.getId());
+
+        // then
+        assertEquals(foundTodos.size(), 3);
+    }
+
+    @Test
     void 투두리스트_추가_And_삭제() {
         // given
         Family family = getFamily("testFam");

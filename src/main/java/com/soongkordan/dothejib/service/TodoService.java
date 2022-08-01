@@ -31,6 +31,10 @@ public class TodoService {
         return todoRepository.findByFamilyId(familyId);
     }
 
+    public List<Todo> findByPublisherId(Long familyId){
+        return todoRepository.findByPublisherId(familyId);
+    }
+
     public Long deleteOne(Long todoId){
         todoRepository.deleteById(todoId);
         return todoId;
