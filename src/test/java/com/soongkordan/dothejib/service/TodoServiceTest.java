@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class TodoServiceTest {
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
         Todo todo =
                 Todo.createTodo(family,familyMember, null,
-                        "title",1,"content", LocalDateTime.now());
+                        "title",1,"content", LocalDate.now());
 
         // when
         todoService.save(todo);
@@ -114,7 +115,7 @@ public class TodoServiceTest {
     private Todo getTodo(String title, Family family, FamilyMember familyMember) {
         Todo todo =
                 Todo.createTodo(family,familyMember, null,
-                        "title",1,"content", LocalDateTime.now());
+                        "title",1,"content", LocalDate.now());
         todoService.save(todo);
         return todo;
     }
