@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TodoDTO {
 
@@ -28,6 +29,13 @@ public class TodoDTO {
 
         private int difficulty;
         private String content;
+    }
+
+    @Getter @Setter
+    public static class CompleteRequest{
+        @NotNull
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+        private LocalDateTime completedAt;
     }
 
     @Getter

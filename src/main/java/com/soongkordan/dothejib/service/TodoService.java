@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,18 @@ public class TodoService {
     public Long save(Todo todo) {
         todoRepository.save(todo);
         return todo.getId();
+    }
+
+    @Transactional
+    public void completeTodo(Long todoId, LocalDateTime completedAt){
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        todo.get().completeTodo(completedAt);
+    }
+
+    @Transactional
+    public void inCompleteTodo(Long todoId){
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        todo.get().inCompleteTodo();
     }
 
     public Optional<Todo> findOne(Long todoId){

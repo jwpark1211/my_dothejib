@@ -92,6 +92,39 @@ public class TodoServiceTest {
         assertEquals(todo.getId(), todoId);
     }
 
+    @Test
+    void 투두_완료(){
+        //given
+        Family family = getFamily("testFam");
+        Member member = getMember("testEmail@test.com");
+        FamilyMember familyMember = getFamilyMember(member, family, "fmName");
+        Todo todo = getTodo("testTodo", family, familyMember);
+
+        //when
+        LocalDateTime time = LocalDateTime.of(2022,5,4,12,30);
+        todoService.completeTodo(todo.getId(),time);
+
+        //then
+        assertEquals(todo.getCompletedAt(),LocalDateTime.of(2022,5,4,12,30));
+    }
+
+    @Test
+    void 투두_완료_취소(){
+        //given
+        Family family = getFamily("testFam");
+        Member member = getMember("testEmail@test.com");
+        FamilyMember familyMember = getFamilyMember(member, family, "fmName");
+        Todo todo = getTodo("testTodo", family, familyMember);
+        LocalDateTime time = LocalDateTime.of(2022,5,4,12,30);
+        todoService.completeTodo(todo.getId(),time);
+
+        //when
+        todoService.inCompleteTodo(todo.getId());
+
+        //then
+        assertEquals(todo.getCompletedAt(),null);
+    }
+
     //=CreateMethod==//
     private Family getFamily(String name) {
         Family family = Family.createFamily(name);

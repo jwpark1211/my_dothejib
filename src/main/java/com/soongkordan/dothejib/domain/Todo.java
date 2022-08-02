@@ -21,11 +21,11 @@ public class Todo {
     private Family family;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "charged_familyMember_id")
+    @JoinColumn(name = "personInCharge_id")
     private FamilyMember personInCharge;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "published_familyMember_id")
+    @JoinColumn(name = "publisher_id")
     private FamilyMember publisher;
 
     private String title; //제목
@@ -49,4 +49,17 @@ public class Todo {
 
         return todo;
     }
+
+    public void completeTodo(LocalDateTime completedAt){
+        if(this.completedAt!=null)
+            throw new IllegalStateException("이미 완료된 할 일 입니다.");
+        this.completedAt = completedAt;
+    }
+
+    public void inCompleteTodo(){
+        if(this.completedAt==null)
+            throw new IllegalStateException("아직 완료되지 않은 할 일 입니다.");
+        this.completedAt = null;
+    }
+
 }
