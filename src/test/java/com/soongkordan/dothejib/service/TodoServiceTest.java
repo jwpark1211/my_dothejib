@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,17 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Transactional
 public class TodoServiceTest {
 
-    @Autowired
-    FamilyMemberService familyMemberService;
-
-    @Autowired
-    FamilyService familyService;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    TodoService todoService;
+    @Autowired FamilyMemberService familyMemberService;
+    @Autowired FamilyService familyService;
+    @Autowired MemberService memberService;
+    @Autowired TodoService todoService;
 
     @Test
     void 투두리스트_추가_And_단일검색() {
@@ -37,7 +31,9 @@ public class TodoServiceTest {
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo = Todo.createTodo("testTodo", family, familyMember);
+        Todo todo =
+                Todo.createTodo(family,familyMember, null,
+                        "title",1,"content", LocalDateTime.now());
 
         // when
         todoService.save(todo);
@@ -116,7 +112,9 @@ public class TodoServiceTest {
     }
 
     private Todo getTodo(String title, Family family, FamilyMember familyMember) {
-        Todo todo = Todo.createTodo(title, family, familyMember);
+        Todo todo =
+                Todo.createTodo(family,familyMember, null,
+                        "title",1,"content", LocalDateTime.now());
         todoService.save(todo);
         return todo;
     }

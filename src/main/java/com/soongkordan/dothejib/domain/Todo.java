@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+//TODO: 루틴 구현
 public class Todo {
 
     @Id
@@ -14,31 +15,36 @@ public class Todo {
     @GeneratedValue
     private Long id;
 
-    private String title;
-
-    private LocalDateTime endAt;
-
-    private int difficulty;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id")
     private Family family;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "charged_familymember_id")
+    @JoinColumn(name = "charged_familyMember_id")
     private FamilyMember personInCharge;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "published_familymember_id")
+    @JoinColumn(name = "published_familyMember_id")
     private FamilyMember publisher;
 
-    private String content;
+    private String title; //제목
+    private int difficulty; //노동강도
+    private String content; //내용
+    private LocalDateTime endAt; //마감기한
+    private LocalDateTime completedAt; //성취날짜
 
-    public static Todo createTodo(String title, Family family, FamilyMember publisher){
+    public static Todo createTodo(
+            Family family, FamilyMember publisher, FamilyMember personInCharge ,
+            String title, int difficulty, String content, LocalDateTime endAt
+    ){
         Todo todo = new Todo();
-        todo.title = title;
         todo.family = family;
         todo.publisher = publisher;
+        todo.personInCharge = personInCharge;
+        todo.title = title;
+        todo.difficulty = difficulty;
+        todo.content = content;
+        todo.endAt = endAt;
 
         return todo;
     }
