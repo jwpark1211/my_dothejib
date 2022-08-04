@@ -38,9 +38,31 @@ public class TodoDTO {
         private LocalDateTime completedAt;
     }
 
-    @Getter
+    @Getter @Setter
+    public static class getTodoRequest{
+        @NotNull
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endAt;
+    }
+
+    @Getter @Setter
+    public static class modifyRequest{
+        private Long personInChargeId;
+        private String title;
+        private String content;
+        private int difficulty;
+        private LocalDate endAt;
+    }
+
+    @Getter @Setter
     @AllArgsConstructor
-    public static class Response{
-        private Long id;
+    public static class getTodoInfoResponse{
+        private Long id; //투두 id
+        private Long publisherId; //발급자
+        private Long personInChargeId; //담당자
+        private String title; //제목
+        private String content; //내용
+        private int difficulty; //노동강도
+        private LocalDateTime completedAt; //성취시간
     }
 }

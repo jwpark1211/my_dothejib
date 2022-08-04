@@ -62,4 +62,14 @@ public class Todo {
         this.completedAt = null;
     }
 
+    public void modifyTodoInfo(
+            FamilyMember personInCharge, String title,String content,int difficulty,LocalDate endAt
+    ){
+        this.personInCharge = personInCharge;
+        this.title = title;
+        this.difficulty = difficulty;
+        this.content = content;
+        this.endAt = endAt;
+    }
+
 }
