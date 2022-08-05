@@ -37,25 +37,31 @@ public class FamilyMemberController {
 
     //TODO: familyMember 이미지 저장 구현
 
-    /*가족 구성원 생성 */
+    /*
+    POST    FamilyMember 생성
+    GET     FamilyMember 단일 조회
+    GET     FamilyMember 전체 조회 ( Family 소속 )
+    PATCH   FamilyMember 정보 수정
+     */
+
+    /*FamilyMember 생성 */
     @PostMapping(path = "/familyMember/new", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends BasicResponse> save(
+    public ResponseEntity<? extends BasicResponse> saveFamilyMember(
             @RequestBody @Valid SaveRequest request
     ){
-        //member,family id 존재하는지 확인
+        //member id, family id 유효 여부 판단
         Optional<Member> member = memberService.findOne(request.getMemberId());
-        Optional<Family> family = familyService.findOne(request.getFamilyId());
-
-        if(!member.isPresent()){
+        if(!member.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 회원 정보가 없습니다. id를 확인해주세요."));
-        }
-        if(!family.isPresent()){
+
+        Optional<Family> family = familyService.findOne(request.getFamilyId());
+        if(!family.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
-        }
 
-        //객체 생성 후 저장
+
+        //FamilyMember 객체 생성
         FamilyMember familyMember =
                 FamilyMember.createFamilyMember(member.get(),family.get(),request.getName(),request.getProfileImg());
         familyMemberService.save(familyMember);
@@ -65,62 +71,59 @@ public class FamilyMemberController {
                         new CommonDTO.IdResponse(familyMember.getId()))); //return: 200+ familyMemberId
     }
 
-    /* 가족 id로 특정 가족 구성원 정보 전체 조회*/
-    @GetMapping(path = "/familyMembers/{id}",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends BasicResponse> getAllFamilyMembersInfoByFamilyId(
-            @PathVariable("id") Long familyId
-    ){
-        //familyId 존재하는지 확인
-        Optional<Family> familyOP = familyService.findOne(familyId);
-
-        if(!familyOP.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
-                    .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
-        }
-
-        //DTO 리스트로 변환
-        List<FamilyMember> familyMembers = familyMemberService.findByFamilyId(familyId);
-        List<Response> familyMemberResponses = familyMembers.stream()
-                .map(fm -> new Response(fm.getId(),fm.getName(),fm.getProfileImg()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok()
-                .body(new CommonResponse<List>(familyMemberResponses));
-        //return : 200 + familyMemberList(Id/name/profileImg)
-    }
-
-    /*가족 구성원 id로 가족 구성원 정보 조회*/
+    /*FamilyMember 단일 조회 */
     @GetMapping(path = "/familyMember/{id}",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends BasicResponse> getFamilyMemberInfo(
+    public ResponseEntity<? extends BasicResponse> getFamilyMember(
             @PathVariable("id") Long familyMemberId
     ){
-        //familyMemberId 존재하는지 확인
+        //familyMember Id 유효 여부 판단
         Optional<FamilyMember> familyMember = familyMemberService.findOne(familyMemberId);
-        if(!familyMember.isPresent()){
+        if(!familyMember.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 구성원 정보가 없습니다. id를 확인해주세요."));
-        }
 
         return ResponseEntity.ok() //return : 200 + Info(id,name,profileImg)
                 .body(new CommonResponse<Response>(
                         new Response(familyMemberId,familyMember.get().getName(),familyMember.get().getProfileImg())));
     }
 
-    /* 가족 구성원 이름 수정 */
-    //TODO: 이미지 수정까지 한 번에 처리?
+    /*FamilyMember 전체 조회 ( Family 소속 )*/
+    @GetMapping(path = "/familyMembers/{id}",produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<? extends BasicResponse> getAllFamilyMembers(
+            @PathVariable("id") Long familyId
+    ){
+        //familyId 유효 여부 판단
+        Optional<Family> familyOP = familyService.findOne(familyId);
+        if(!familyOP.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
+                    .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
+
+        //List<Entity> -> List<DTO>
+        List<FamilyMember> familyMembers = familyMemberService.findByFamilyId(familyId);
+        List<Response> familyMemberResponses = familyMembers.stream()
+                .map(fm -> new Response(fm.getId(),fm.getName(),fm.getProfileImg()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok() //return : 200 + familyMemberList(Id/name/profileImg)
+                .body(new CommonResponse<List>(familyMemberResponses));
+    }
+
+    /*FamilyMember 정보 수정*/
+    //TODO: 이미지 수정까지 한 번에 처리
     @PatchMapping(path="/familyMember/{id}",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends BasicResponse> modifyFamilyMemberInfo(
+    public ResponseEntity<? extends BasicResponse> modifyFamilyMember(
             @PathVariable("id") Long familyMemberId,
             @RequestBody ModifyInfoRequest request
     ){
-        //familyMemberId 존재하는지 확인
+        //familyMemberId 유효 여부 판단
         Optional<FamilyMember> familyMember =
                 familyMemberService.findOne(familyMemberId);
-        if(!familyMember.isPresent()){
+        if(!familyMember.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 구성원 정보가 없습니다. id를 확인해주세요."));
-        }
+
+        //수정
         familyMemberService.modifyFamilyMemberInfo(familyMemberId,request.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).build(); //return : 201
+        return ResponseEntity.ok().build(); //return : 200
     }
 }

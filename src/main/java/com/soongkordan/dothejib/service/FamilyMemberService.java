@@ -17,6 +17,15 @@ public class FamilyMemberService {
 
     private final FamilyMemberRepository familyMemberRepository;
 
+    /*
+    * save : Long
+    * findOne : Optional<FamilyMember>
+    * findByFamilyId : List<FamilyMember>
+    * findByMemberId : List<FamilyMember>
+    * findByFamilyIdAndMemberId : Optional<FamilyMember>
+    * modifyFamilyMemberInfo : void
+     */
+
     @Transactional
     public Long save(FamilyMember familyMember){
         validateDuplicateFamilyMember(familyMember);
@@ -46,7 +55,7 @@ public class FamilyMemberService {
         familyMember.get().modifyName(name);
     }
 
-    // TODO: 에러 메세지 고쳐야됨...
+    // TODO: 에러 메시지 수정
     private void validateDuplicateFamilyMember(FamilyMember familyMember){
         Long memberId = familyMember.getMember().getId();
         Long familyId = familyMember.getFamily().getId();

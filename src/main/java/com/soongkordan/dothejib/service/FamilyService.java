@@ -16,6 +16,13 @@ public class FamilyService {
 
     private final FamilyRepository familyRepository;
 
+    /*
+    * save : Long
+    * findOne :  Optional<Family>
+    * findByName :  Optional<Family>
+    * modifyFamilyInfo : void
+     */
+
     @Transactional
     public Long save(Family family){
         familyRepository.save(family);

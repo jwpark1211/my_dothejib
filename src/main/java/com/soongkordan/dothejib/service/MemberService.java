@@ -16,15 +16,18 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    /*
+    * join : Long
+    * findOne : Optional<Member>
+    * findByEmail : Optional<Member>
+    * findMembers :  List<Member>
+     */
+
     @Transactional
     public Long join(Member member){
         validateDuplicateMember(member);
         memberRepository.save(member);
         return member.getId();
-    }
-
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
     }
 
     public Optional<Member> findOne(Long memberId) {
@@ -33,6 +36,10 @@ public class MemberService {
 
     public Optional<Member> findByEmail(String email){
         return memberRepository.findByEmail(email);
+    }
+
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
     }
 
     private void validateDuplicateMember(Member member) {

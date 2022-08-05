@@ -19,30 +19,23 @@ import java.util.Optional;
 public class TodoService {
     private final TodoRepository todoRepository;
 
+    /*
+    * save : Long
+    * findOne : Optional<Todo>
+    * findByFamilyId : List<Todo>
+    * findByPublisherId : List<Todo>
+    * findByFamilyIdAndEndAt : List<Todo>
+    * findByPersonInChargeIdAndEndAt : List<Todo>
+    * modifyTodo : void
+    * deleteOne : Long
+    * completeTodo : void
+    * inCompleteTodo : void
+     */
+
     @Transactional
     public Long save(Todo todo) {
         todoRepository.save(todo);
         return todo.getId();
-    }
-
-    @Transactional
-    public void completeTodo(Long todoId, LocalDateTime completedAt){
-        Optional<Todo> todo = todoRepository.findById(todoId);
-        todo.get().completeTodo(completedAt);
-    }
-
-    @Transactional
-    public void inCompleteTodo(Long todoId){
-        Optional<Todo> todo = todoRepository.findById(todoId);
-        todo.get().inCompleteTodo();
-    }
-
-    @Transactional
-    public void modifyTodo(Long todoId,FamilyMember personInCharge,
-                           String title,String content,int difficulty,LocalDate endAt
-    ){
-        Optional<Todo> todo = todoRepository.findById(todoId);
-        todo.get().modifyTodoInfo(personInCharge, title, content, difficulty, endAt);
     }
 
     public Optional<Todo> findOne(Long todoId){
@@ -58,12 +51,6 @@ public class TodoService {
         return todoRepository.findByPublisherId(familyId);
     }
 
-    @Transactional
-    public Long deleteOne(Long todoId){
-        todoRepository.deleteById(todoId);
-        return todoId;
-    }
-
     public List<Todo> findByFamilyIdAndEndAt(Long familyId, LocalDate endAt){
         return todoRepository.findByFamilyIdAndEndAt(familyId, endAt);
     }
@@ -72,4 +59,29 @@ public class TodoService {
         return todoRepository.findByPersonInChargeIdAndEndAt(personInChargeId, endAt);
     }
 
+    @Transactional
+    public void modifyTodo(Long todoId,FamilyMember personInCharge,
+                           String title,String content,int difficulty,LocalDate endAt
+    ){
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        todo.get().modifyTodoInfo(personInCharge, title, content, difficulty, endAt);
+    }
+
+    @Transactional
+    public Long deleteOne(Long todoId){
+        todoRepository.deleteById(todoId);
+        return todoId;
+    }
+
+    @Transactional
+    public void completeTodo(Long todoId, LocalDateTime completedAt){
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        todo.get().completeTodo(completedAt);
+    }
+
+    @Transactional
+    public void inCompleteTodo(Long todoId){
+        Optional<Todo> todo = todoRepository.findById(todoId);
+        todo.get().inCompleteTodo();
+    }
 }
