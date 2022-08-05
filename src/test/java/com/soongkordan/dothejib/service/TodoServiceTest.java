@@ -27,7 +27,7 @@ public class TodoServiceTest {
     @Autowired TodoService todoService;
 
     @Test
-    void 투두리스트_추가_And_단일검색() {
+    void save_and_findOne() {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -44,7 +44,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    void 투두리스트_패밀리아이디_검색() {
+    void findByFamilyId() {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -61,7 +61,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    void 투두리스트_투두발행자_검색() {
+    void findByPublisherId() {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -78,7 +78,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    void 투두리스트_추가_And_삭제() {
+    void deleteOne() {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -93,7 +93,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    void 투두_완료(){
+    void completeTodo(){
         //given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -109,7 +109,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    void 투두_완료_취소(){
+    void inCompleteTodo(){
         //given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
@@ -124,6 +124,63 @@ public class TodoServiceTest {
         //then
         assertEquals(todo.getCompletedAt(),null);
     }
+
+    @Test
+    void modifyTodo(){
+        //given
+        Family family = getFamily("testFam");
+        Member member1 = getMember("testEmail@test.com");
+        Member member2 = getMember("testEmail2@test.com");
+        FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
+        FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
+        Todo todo = getTodo("testTodo", family, familyMember1);
+
+        //when
+        todoService.modifyTodo(todo.getId(),familyMember2,"modify","modify",
+                10,LocalDate.of(2021,12,13));
+
+        //then
+        assertEquals(familyMember2,todo.getPersonInCharge());
+    }
+
+    @Test
+    void findByFamilyIdAndEndAt(){
+        //given
+        Family family = getFamily("testFam");
+        Member member1 = getMember("testEmail@test.com");
+        Member member2 = getMember("testEmail2@test.com");
+        FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
+        FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
+        Todo todo1 = getTodo("testTodo", family, familyMember1);
+        Todo todo2  = getTodo("testTodo2",family,familyMember2);
+
+        //when
+        List<Todo> todos = todoService.findByFamilyIdAndEndAt(family.getId(),LocalDate.of(2022,4,25));
+
+        //then
+        assertEquals(todos.size(),2);
+    }
+
+    @Test
+    void findByPersonInChargeIdAndEndAt(){
+        //given
+        Family family = getFamily("testFam");
+        Member member1 = getMember("testEmail@test.com");
+        Member member2 = getMember("testEmail2@test.com");
+        FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
+        FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
+        Todo todo1 = getTodo("testTodo", family, familyMember1);
+        Todo todo2  = getTodo("testTodo2",family,familyMember2);
+        Todo todo3 = getTodo("testTodo3",family,familyMember2);
+
+        //when
+        List<Todo> todos = todoService.findByPersonInChargeIdAndEndAt(
+                familyMember2.getId(),LocalDate.of(2022,4,25));
+
+        //then
+        assertEquals(todos.size(),2);
+    }
+
 
     //=CreateMethod==//
     private Family getFamily(String name) {
@@ -147,8 +204,8 @@ public class TodoServiceTest {
 
     private Todo getTodo(String title, Family family, FamilyMember familyMember) {
         Todo todo =
-                Todo.createTodo(family,familyMember, null,
-                        "title",1,"content", LocalDate.now());
+                Todo.createTodo(family,familyMember, familyMember,
+                        "title",1,"content", LocalDate.of(2022,4,25));
         todoService.save(todo);
         return todo;
     }
