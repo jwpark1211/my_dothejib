@@ -86,8 +86,7 @@ public class TodoController {
     /*Todo 단일 조회*/
     @GetMapping(path = "/Todo/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getOneTodo(
-            @PathVariable("id") Long todoId,
-            @RequestBody @Valid getTodoRequest request
+            @PathVariable("id") Long todoId
     ){
         //todoId 유효 여부 판단
         Optional<Todo> todo = todoService.findOne(todoId);
