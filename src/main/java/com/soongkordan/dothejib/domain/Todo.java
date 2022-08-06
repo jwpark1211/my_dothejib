@@ -25,6 +25,10 @@ public class Todo {
     private FamilyMember personInCharge;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id")
     private FamilyMember publisher;
 
