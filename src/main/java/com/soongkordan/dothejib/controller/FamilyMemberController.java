@@ -45,8 +45,9 @@ public class FamilyMemberController {
      */
 
     /*FamilyMember 생성 */
-    @PostMapping(path = "/familyMember/new", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "families/{family-id}/family-members/new", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> saveFamilyMember(
+            @PathVariable("family-id") Long familyId,
             @RequestBody @Valid SaveRequest request
     ){
         //member id, family id 유효 여부 판단
@@ -55,7 +56,7 @@ public class FamilyMemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 회원 정보가 없습니다. id를 확인해주세요."));
 
-        Optional<Family> family = familyService.findOne(request.getFamilyId());
+        Optional<Family> family = familyService.findOne(familyId);
         if(!family.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
@@ -72,12 +73,14 @@ public class FamilyMemberController {
     }
 
     /*FamilyMember 단일 조회 */
-    @GetMapping(path = "/familyMember/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/family-members/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyMember(
+            @PathVariable("family-id") Long familyId,
             @PathVariable("id") Long familyMemberId
     ){
         //familyMember Id 유효 여부 판단
         Optional<FamilyMember> familyMember = familyMemberService.findOne(familyMemberId);
+        // TODO: || familyMember.get().getFamily().getId() != familyId 예외처리 필요
         if(!familyMember.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 구성원 정보가 없습니다. id를 확인해주세요."));
@@ -88,9 +91,9 @@ public class FamilyMemberController {
     }
 
     /*FamilyMember 전체 조회 ( Family 소속 )*/
-    @GetMapping(path = "/familyMembers/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/family-members",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getAllFamilyMembers(
-            @PathVariable("id") Long familyId
+            @PathVariable("family-id") Long familyId
     ){
         //familyId 유효 여부 판단
         Optional<Family> familyOP = familyService.findOne(familyId);
@@ -110,14 +113,16 @@ public class FamilyMemberController {
 
     /*FamilyMember 정보 수정*/
     //TODO: 이미지 수정까지 한 번에 처리
-    @PatchMapping(path="/familyMember/{id}",produces = APPLICATION_JSON_VALUE)
+    @PatchMapping(path="/families/{family-id}/family-members/{id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyMember(
+            @PathVariable("family-id") Long familyId,
             @PathVariable("id") Long familyMemberId,
             @RequestBody ModifyInfoRequest request
     ){
         //familyMemberId 유효 여부 판단
         Optional<FamilyMember> familyMember =
                 familyMemberService.findOne(familyMemberId);
+        // TODO: || familyMember.get().getFamily().getId() != familyId 예외처리 필요
         if(!familyMember.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 구성원 정보가 없습니다. id를 확인해주세요."));

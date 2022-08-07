@@ -79,7 +79,6 @@ public class FamilyMemberControllerTest {
                 .thenReturn(Optional.of(family));
 
         SaveRequest request = new SaveRequest();
-        request.setFamilyId(1L);
         request.setMemberId(2L);
         request.setName("name");
         request.setProfileImg("image");
@@ -87,7 +86,7 @@ public class FamilyMemberControllerTest {
         String object = objectMapper.writeValueAsString(request);
 
         //when
-        ResultActions actions = mvc.perform(post("/familyMember/new")
+        ResultActions actions = mvc.perform(post("/families/1/family-members/new")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(object));
 
@@ -107,7 +106,6 @@ public class FamilyMemberControllerTest {
                 .thenReturn(Optional.of(family));
 
         SaveRequest request = new SaveRequest();
-        request.setFamilyId(1L);
         request.setMemberId(2L);
         request.setName("name");
         request.setProfileImg("image");
@@ -115,7 +113,7 @@ public class FamilyMemberControllerTest {
         String object = objectMapper.writeValueAsString(request);
 
         //when
-        ResultActions actions = mvc.perform(post("/familyMember/new")
+        ResultActions actions = mvc.perform(post("/families/1/family-members/new")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(object));
 
@@ -132,7 +130,7 @@ public class FamilyMemberControllerTest {
         given(familyMemberService.findOne(any())).willReturn(familyMember1);
 
         //when
-        ResultActions actions = mvc.perform(get("/familyMember/1"));
+        ResultActions actions = mvc.perform(get("/families/1/family-members/1"));
 
         //then
         actions
@@ -147,7 +145,7 @@ public class FamilyMemberControllerTest {
         given(familyMemberService.findOne(any())).willReturn(nullFamilyMember);
 
         //when
-        ResultActions actions = mvc.perform(get("/familyMember/1"));
+        ResultActions actions = mvc.perform(get("/families/1/family-members/1"));
 
         //then
         actions
@@ -164,7 +162,7 @@ public class FamilyMemberControllerTest {
                 .thenReturn(Optional.of(family));
 
         //when
-        ResultActions actions = mvc.perform(get("/familyMembers/1"));
+        ResultActions actions = mvc.perform(get("/families/1/family-members"));
 
         //then
         actions
@@ -184,7 +182,7 @@ public class FamilyMemberControllerTest {
         String object = objectMapper.writeValueAsString(request);
 
         //when
-        ResultActions actions = mvc.perform(patch("/familyMember/1")
+        ResultActions actions = mvc.perform(patch("/families/1/family-members/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(object));
 

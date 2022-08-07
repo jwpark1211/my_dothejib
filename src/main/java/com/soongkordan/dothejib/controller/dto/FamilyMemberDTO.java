@@ -15,8 +15,6 @@ public class FamilyMemberDTO {
     public static class SaveRequest {
         @NotNull
         private Long memberId;
-        @NotNull
-        private Long familyId;
         private String name;
         private String profileImg;
     }
