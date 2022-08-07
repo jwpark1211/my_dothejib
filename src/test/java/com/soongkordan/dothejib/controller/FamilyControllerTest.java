@@ -55,7 +55,7 @@ public class FamilyControllerTest {
         String object = toJsonString(family.get());
 
         //when
-        ResultActions actions = mvc.perform(post("/family/new")
+        ResultActions actions = mvc.perform(post("/families/new")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(object));
 
@@ -74,7 +74,7 @@ public class FamilyControllerTest {
         given(familyService.findOne(any())).willReturn(family);
 
         //when
-        ResultActions actions = mvc.perform(get("/family/1"));
+        ResultActions actions = mvc.perform(get("/families/1"));
 
         //then
         actions
@@ -92,7 +92,7 @@ public class FamilyControllerTest {
         given(familyService.findOne(any())).willReturn(nullFamily);
 
         //when
-        ResultActions actions = mvc.perform(get("/family/1"));
+        ResultActions actions = mvc.perform(get("/families/1"));
 
         //then
         actions
