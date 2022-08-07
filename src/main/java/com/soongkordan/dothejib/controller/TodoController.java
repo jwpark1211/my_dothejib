@@ -47,8 +47,9 @@ public class TodoController {
      */
 
     /*Todo 생성*/
-    @PostMapping(path = "/Todo/new",produces =  APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/families/{family-id}/todos/new",produces =  APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> saveTodo(
+            @PathVariable("family-id") Long familyId,
             @RequestBody @Valid SaveRequest request
     ){
         //family,publisher id 유효 여부 판단
@@ -84,9 +85,10 @@ public class TodoController {
     }
 
     /*Todo 단일 조회*/
-    @GetMapping(path = "/Todo/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/todos/{todo-id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getOneTodo(
-            @PathVariable("id") Long todoId
+            @PathVariable("family-id") Long familyId,
+            @PathVariable("todo-id") Long todoId
     ){
         //todoId 유효 여부 판단
         Optional<Todo> todo = todoService.findOne(todoId);
@@ -103,9 +105,9 @@ public class TodoController {
     }
 
     /*Todo 목록 조회(가족단위)*/
-    @GetMapping(path = "/FamilyTodo/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/todos",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyTodo(
-            @PathVariable("id") Long familyId,
+            @PathVariable("family-id") Long familyId,
             @RequestBody @Valid getTodoRequest request
     ){
         //familyId 유효 여부 판단
@@ -128,9 +130,9 @@ public class TodoController {
     }
 
     /*Todo 목록 조회(가족구성원 단위)*/
-    @GetMapping(path = "/FamilyMemberTodo/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/family-members/{family-member-id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyMemberTodo(
-            @PathVariable("id") Long personInChargeId,
+            @PathVariable("family-member-id") Long personInChargeId,
             @RequestBody @Valid getTodoRequest request
     ){
         //PersonInChargeId 유효 여부 판단
@@ -153,9 +155,10 @@ public class TodoController {
     }
 
     /*Todo 수정*/
-    @PutMapping(path = "/Todo/{id}", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/families/{family-id}/todos/{todo-id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyTodo(
-            @PathVariable("id") Long todoId,
+            @PathVariable("family-id") Long familyId,
+            @PathVariable("todo-id") Long todoId,
             @RequestBody @Valid modifyRequest request
     ) {
         //todoId 유효 여부 판단
@@ -184,9 +187,10 @@ public class TodoController {
     }
 
     /*Todo 삭제*/
-    @DeleteMapping(path = "/Todo/{id}", produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/families/{family-id}/todos/{todo-id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> deleteTodo(
-            @PathVariable("id") Long todoId
+            @PathVariable("family-id") Long familyId,
+            @PathVariable("todo-id") Long todoId
     ){
         //todoId 유효 여부 판단
         Optional<Todo> todo = todoService.findOne(todoId);
@@ -201,10 +205,11 @@ public class TodoController {
     }
 
     /*Todo Check( 완료 시간 생성 )*/
-    @PostMapping(path = "/Todo/complete/{id}",produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/families/{family-id}/todos/{todo-id}/complete",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> CompleteTodo(
             @RequestBody @Valid CompleteRequest request,
-            @PathVariable("id") Long todoId
+            @PathVariable("family-id") Long familyId,
+            @PathVariable("todo-id") Long todoId
     ){
         //todoId가 유효한지 확인
         Optional<Todo> todo = todoService.findOne(todoId);
@@ -218,9 +223,10 @@ public class TodoController {
     }
 
     /*Todo UnCheck( 완료 시간 삭제 )*/
-    @DeleteMapping(path = "/Todo/complete/{id}",produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/families/{family-id}/todos/{todo-id}/complete",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> InCompleteTodo(
-            @PathVariable("id") Long todoId
+            @PathVariable("family-id") Long familyId,
+            @PathVariable("todo-id") Long todoId
     ){
         //todoId가 유효한지 확인
         Optional<Todo> todo = todoService.findOne(todoId);

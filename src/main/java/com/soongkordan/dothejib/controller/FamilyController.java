@@ -32,8 +32,8 @@ public class FamilyController {
      */
 
     /*Family 생성*/
-    @PostMapping(path = "/family/new", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends BasicResponse> save(
+    @PostMapping(path = "/families/new", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<? extends BasicResponse> saveFamily(
             @RequestBody @Valid Request request
     ){
         //family 객체 생성
@@ -46,9 +46,9 @@ public class FamilyController {
     }
 
     /*Family 단일 조회*/
-    @GetMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyInfo(
-            @PathVariable("id") Long familyId
+            @PathVariable("family-id") Long familyId
     ){
         //family id 유효 여부 판단
         Optional<Family> family = familyService.findOne(familyId);
@@ -65,9 +65,9 @@ public class FamilyController {
     }
 
     /*Family 정보 수정*/
-    @PatchMapping(path = "/family/{id}",produces = APPLICATION_JSON_VALUE)
+    @PatchMapping(path = "/families/{family-id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyInfo(
-            @PathVariable("id") Long familyId,
+            @PathVariable("family-id") Long familyId,
             @RequestBody @Valid Request request
     ){
         //family id 유효 여부 판단
