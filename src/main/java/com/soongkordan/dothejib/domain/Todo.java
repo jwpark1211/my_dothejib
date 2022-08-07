@@ -40,13 +40,14 @@ public class Todo {
 
     public static Todo createTodo(
             Family family, FamilyMember publisher, FamilyMember personInCharge ,
-            String title, int difficulty, String content, LocalDate endAt
+            String title, Category category, int difficulty, String content, LocalDate endAt
     ){
         Todo todo = new Todo();
         todo.family = family;
         todo.publisher = publisher;
         todo.personInCharge = personInCharge;
         todo.title = title;
+        todo.category = category;
         todo.difficulty = difficulty;
         todo.content = content;
         todo.endAt = endAt;
@@ -67,10 +68,11 @@ public class Todo {
     }
 
     public void modifyTodoInfo(
-            FamilyMember personInCharge, String title,String content,int difficulty,LocalDate endAt
+            FamilyMember personInCharge, String title, Category category, String content,int difficulty,LocalDate endAt
     ){
         this.personInCharge = personInCharge;
         this.title = title;
+        this.category = category;
         this.difficulty = difficulty;
         this.content = content;
         this.endAt = endAt;

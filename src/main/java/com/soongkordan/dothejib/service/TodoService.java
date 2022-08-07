@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.domain.Category;
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
 import com.soongkordan.dothejib.domain.Todo;
@@ -60,11 +61,11 @@ public class TodoService {
     }
 
     @Transactional
-    public void modifyTodo(Long todoId,FamilyMember personInCharge,
-                           String title,String content,int difficulty,LocalDate endAt
+    public void modifyTodo(Long todoId, FamilyMember personInCharge,
+                           String title, Category category, String content, int difficulty, LocalDate endAt
     ){
         Optional<Todo> todo = todoRepository.findById(todoId);
-        todo.get().modifyTodoInfo(personInCharge, title, content, difficulty, endAt);
+        todo.get().modifyTodoInfo(personInCharge, title, category, content, difficulty, endAt);
     }
 
     @Transactional

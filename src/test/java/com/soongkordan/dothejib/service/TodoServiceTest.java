@@ -1,9 +1,6 @@
 package com.soongkordan.dothejib.service;
 
-import com.soongkordan.dothejib.domain.Family;
-import com.soongkordan.dothejib.domain.FamilyMember;
-import com.soongkordan.dothejib.domain.Member;
-import com.soongkordan.dothejib.domain.Todo;
+import com.soongkordan.dothejib.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,15 +23,18 @@ public class TodoServiceTest {
     @Autowired MemberService memberService;
     @Autowired TodoService todoService;
 
+    @Autowired CategoryService categoryService;
+
     @Test
     void save_and_findOne() {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
         Todo todo =
                 Todo.createTodo(family,familyMember, null,
-                        "title",1,"content", LocalDate.now());
+                        "title", category,1,"content", LocalDate.now());
 
         // when
         todoService.save(todo);
@@ -48,10 +48,11 @@ public class TodoServiceTest {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo1 = getTodo("testTodo1", family, familyMember);
-        Todo todo2 = getTodo("testTodo2", family, familyMember);
-        Todo todo3 = getTodo("testTodo3", family, familyMember);
+        Todo todo1 = getTodo("testTodo1", category, family, familyMember);
+        Todo todo2 = getTodo("testTodo2", category, family, familyMember);
+        Todo todo3 = getTodo("testTodo3", category, family, familyMember);
 
         // when
         List<Todo> foundTodos = todoService.findByFamilyId(family.getId());
@@ -65,10 +66,11 @@ public class TodoServiceTest {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo1 = getTodo("testTodo1", family, familyMember);
-        Todo todo2 = getTodo("testTodo2", family, familyMember);
-        Todo todo3 = getTodo("testTodo3", family, familyMember);
+        Todo todo1 = getTodo("testTodo1", category, family, familyMember);
+        Todo todo2 = getTodo("testTodo2", category, family, familyMember);
+        Todo todo3 = getTodo("testTodo3", category, family, familyMember);
 
         // when
         List<Todo> foundTodos = todoService.findByPublisherId(familyMember.getId());
@@ -82,8 +84,9 @@ public class TodoServiceTest {
         // given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo = getTodo("testTodo", family, familyMember);
+        Todo todo = getTodo("testTodo", category, family, familyMember);
 
         // when
         Long todoId = todoService.deleteOne(todo.getId());
@@ -97,8 +100,9 @@ public class TodoServiceTest {
         //given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo = getTodo("testTodo", family, familyMember);
+        Todo todo = getTodo("testTodo", category, family, familyMember);
 
         //when
         LocalDateTime time = LocalDateTime.of(2022,5,4,12,30);
@@ -113,8 +117,9 @@ public class TodoServiceTest {
         //given
         Family family = getFamily("testFam");
         Member member = getMember("testEmail@test.com");
+        Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
-        Todo todo = getTodo("testTodo", family, familyMember);
+        Todo todo = getTodo("testTodo", category, family, familyMember);
         LocalDateTime time = LocalDateTime.of(2022,5,4,12,30);
         todoService.completeTodo(todo.getId(),time);
 
@@ -129,14 +134,15 @@ public class TodoServiceTest {
     void modifyTodo(){
         //given
         Family family = getFamily("testFam");
+        Category category = getCategory(family, "Category1");
         Member member1 = getMember("testEmail@test.com");
         Member member2 = getMember("testEmail2@test.com");
         FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
         FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
-        Todo todo = getTodo("testTodo", family, familyMember1);
+        Todo todo = getTodo("testTodo", category, family, familyMember1);
 
         //when
-        todoService.modifyTodo(todo.getId(),familyMember2,"modify","modify",
+        todoService.modifyTodo(todo.getId(),familyMember2,"modify",category, "modify",
                 10,LocalDate.of(2021,12,13));
 
         //then
@@ -147,12 +153,13 @@ public class TodoServiceTest {
     void findByFamilyIdAndEndAt(){
         //given
         Family family = getFamily("testFam");
+        Category category = getCategory(family, "Category1");
         Member member1 = getMember("testEmail@test.com");
         Member member2 = getMember("testEmail2@test.com");
         FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
         FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
-        Todo todo1 = getTodo("testTodo", family, familyMember1);
-        Todo todo2  = getTodo("testTodo2",family,familyMember2);
+        Todo todo1 = getTodo("testTodo", category, family, familyMember1);
+        Todo todo2  = getTodo("testTodo2",category, family,familyMember2);
 
         //when
         List<Todo> todos = todoService.findByFamilyIdAndEndAt(family.getId(),LocalDate.of(2022,4,25));
@@ -165,13 +172,14 @@ public class TodoServiceTest {
     void findByPersonInChargeIdAndEndAt(){
         //given
         Family family = getFamily("testFam");
+        Category category = getCategory(family, "Category1");
         Member member1 = getMember("testEmail@test.com");
         Member member2 = getMember("testEmail2@test.com");
         FamilyMember familyMember1 = getFamilyMember(member1, family, "fmName");
         FamilyMember familyMember2 = getFamilyMember(member2,family,"fmName");
-        Todo todo1 = getTodo("testTodo", family, familyMember1);
-        Todo todo2  = getTodo("testTodo2",family,familyMember2);
-        Todo todo3 = getTodo("testTodo3",family,familyMember2);
+        Todo todo1 = getTodo("testTodo", category, family, familyMember1);
+        Todo todo2  = getTodo("testTodo2", category, family,familyMember2);
+        Todo todo3 = getTodo("testTodo3", category, family,familyMember2);
 
         //when
         List<Todo> todos = todoService.findByPersonInChargeIdAndEndAt(
@@ -202,11 +210,17 @@ public class TodoServiceTest {
         return familyMember;
     }
 
-    private Todo getTodo(String title, Family family, FamilyMember familyMember) {
+    private Todo getTodo(String title, Category category, Family family, FamilyMember familyMember) {
         Todo todo =
                 Todo.createTodo(family,familyMember, familyMember,
-                        "title",1,"content", LocalDate.of(2022,4,25));
+                        "title", category,1,"content", LocalDate.of(2022,4,25));
         todoService.save(todo);
         return todo;
+    }
+
+    private Category getCategory(Family family, String name){
+        Category category = Category.createCategory(family, name, "", "desc");
+        categoryService.save(category);
+        return category;
     }
 }

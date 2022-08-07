@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.controller.dto;
 
+import com.soongkordan.dothejib.domain.Category;
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class TodoDTO {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate endAt;
 
+        private Long categoryId;
         private int difficulty;
         private String content;
     }
@@ -50,6 +52,7 @@ public class TodoDTO {
         private Long personInChargeId;
         private String title;
         private String content;
+        private Long categoryId; //카테고리
         private int difficulty;
         private LocalDate endAt;
     }
@@ -62,6 +65,7 @@ public class TodoDTO {
         private Long personInChargeId; //담당자
         private String title; //제목
         private String content; //내용
+        private Long categoryId; //카테고리
         private int difficulty; //노동강도
         private LocalDateTime completedAt; //성취시간
     }

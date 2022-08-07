@@ -5,9 +5,11 @@ import com.soongkordan.dothejib.controller.dto.FamilyDTO;
 import com.soongkordan.dothejib.controller.exception.BasicResponse;
 import com.soongkordan.dothejib.controller.exception.CommonResponse;
 import com.soongkordan.dothejib.controller.exception.ErrorResponse;
+import com.soongkordan.dothejib.domain.Category;
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
 import com.soongkordan.dothejib.domain.Todo;
+import com.soongkordan.dothejib.service.CategoryService;
 import com.soongkordan.dothejib.service.FamilyMemberService;
 import com.soongkordan.dothejib.service.FamilyService;
 import com.soongkordan.dothejib.service.TodoService;
@@ -32,6 +34,7 @@ public class TodoController {
     private final TodoService todoService;
     private final FamilyService familyService;
     private final FamilyMemberService familyMemberService;
+    private final CategoryService categoryService;
 
     //TODO: 코드가 너무 길어서 리팩토링 필요
 
@@ -63,6 +66,11 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("일치하는 발행자 정보가 없습니다. id를 확인해주세요."));
 
+        Optional<Category> category = categoryService.findOne(request.getCategoryId());
+        if(!category.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
+
         //personInCharge id 입력 여부 판단 후 Todo 객체 생성
         Todo todo;
         if(request.getPersonInChargeId()!=null){
@@ -71,11 +79,11 @@ public class TodoController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ErrorResponse("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
             todo = Todo.createTodo(family.get(),publisher.get(),personInCharge.get(),
-                    request.getTitle(),request.getDifficulty(),request.getContent(),request.getEndAt());
+                    request.getTitle(), category.get(), request.getDifficulty(),request.getContent(),request.getEndAt());
         }
         else{
             todo = Todo.createTodo(family.get(),publisher.get(),null,
-                    request.getTitle(),request.getDifficulty(),request.getContent(),request.getEndAt());
+                    request.getTitle(), category.get(), request.getDifficulty(),request.getContent(),request.getEndAt());
         }
 
         Long savedId = todoService.save(todo);
@@ -96,12 +104,12 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
 
-        Todo Todo = todo.get();
+        Todo todoInst = todo.get();
         return ResponseEntity.ok()
                 .body(new CommonResponse<getTodoInfoResponse>(
                         new getTodoInfoResponse(
-                                Todo.getId(),Todo.getPublisher().getId(),Todo.getPersonInCharge().getId(),Todo.getTitle(),
-                                Todo.getContent(),Todo.getDifficulty(),Todo.getCompletedAt())));
+                                todoInst.getId(),todoInst.getPublisher().getId(),todoInst.getPersonInCharge().getId(),todoInst.getTitle(),
+                                todoInst.getContent(), todoInst.getCategory().getId(), todoInst.getDifficulty(),todoInst.getCompletedAt())));
     }
 
     /*Todo 목록 조회(가족단위)*/
@@ -122,7 +130,7 @@ public class TodoController {
         List<getTodoInfoResponse> todoInfo = AllTodo.stream()
                 .map(t -> new getTodoInfoResponse(
                         t.getId(), t.getPublisher().getId(),t.getPersonInCharge().getId(),t.getTitle()
-                        ,t.getContent(), t.getDifficulty(),t.getCompletedAt()))
+                        ,t.getContent(), t.getCategory().getId(), t.getDifficulty(),t.getCompletedAt()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok() //return : 200 + todoInfoList
@@ -147,7 +155,7 @@ public class TodoController {
         List<getTodoInfoResponse> todoInfo = AllTodo.stream()
                 .map(t -> new getTodoInfoResponse(
                         t.getId(), t.getPublisher().getId(),t.getPersonInCharge().getId(),t.getTitle()
-                        ,t.getContent(), t.getDifficulty(),t.getCompletedAt()))
+                        ,t.getContent(), t.getCategory().getId(), t.getDifficulty(),t.getCompletedAt()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok() //return : 200 + todoInfoList
@@ -168,6 +176,13 @@ public class TodoController {
                     .body(new ErrorResponse("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
         }
 
+        //category 유효 여부 판단
+        Optional<Category> category = categoryService.findOne(request.getCategoryId());
+        if (!category.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+        }
+
         //personInCharge Id 유효 여부 판단 및 수정 메소드 호출
         if (request.getPersonInChargeId() != null) {
             Optional<FamilyMember> personInCharge = familyMemberService.findOne(request.getPersonInChargeId());
@@ -175,11 +190,11 @@ public class TodoController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ErrorResponse("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
 
-            todoService.modifyTodo(todoId, personInCharge.get(), request.getTitle(),
+            todoService.modifyTodo(todoId, personInCharge.get(), request.getTitle(), category.get(),
                     request.getContent(), request.getDifficulty(), request.getEndAt());
         }
         else {
-            todoService.modifyTodo(todoId, null, request.getTitle(),
+            todoService.modifyTodo(todoId, null, request.getTitle(), category.get(),
                     request.getContent(), request.getDifficulty(), request.getEndAt());
         }
 
