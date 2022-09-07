@@ -138,7 +138,7 @@ public class TodoController {
     }
 
     /*Todo 목록 조회(가족구성원 단위)*/
-    @GetMapping(path = "/families/{family-id}/family-members/{family-member-id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/family-members/{family-member-id}/todos", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyMemberTodo(
             @PathVariable("family-member-id") Long personInChargeId,
             @RequestBody @Valid getTodoRequest request
