@@ -85,4 +85,14 @@ public class TodoService {
         Optional<Todo> todo = todoRepository.findById(todoId);
         todo.get().inCompleteTodo();
     }
+
+    @Transactional
+    public void addPersonInCharge(Todo todo,FamilyMember personInCharge){
+        todo.addPersonInCharge(personInCharge);
+    }
+
+    @Transactional
+    public void addCategory(Todo todo, Category category){
+        todo.addCategory(category);
+    }
 }

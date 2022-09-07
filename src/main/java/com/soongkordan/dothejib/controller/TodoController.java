@@ -76,7 +76,7 @@ public class TodoController {
             if (!personInCharge.isPresent())
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ErrorResponse("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
-            todo.addPersonInCharge(personInCharge.get());
+            todoService.addPersonInCharge(todo,personInCharge.get());
         }
 
         //Category id null, 유효 여부 판단
@@ -85,7 +85,7 @@ public class TodoController {
             if (!category.isPresent())
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ErrorResponse("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
-            todo.addCategory(category.get());
+            todoService.addCategory(todo,category.get());
         }
 
         Long savedId = todoService.save(todo);
