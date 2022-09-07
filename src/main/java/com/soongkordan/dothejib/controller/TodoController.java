@@ -66,24 +66,26 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("일치하는 발행자 정보가 없습니다. id를 확인해주세요."));
 
-        Optional<Category> category = categoryService.findOne(request.getCategoryId());
-        if(!category.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
+        //todo 생성
+        Todo todo = Todo.createTodo(family.get(),publisher.get(),null,request.getTitle(),
+                null,request.getDifficulty(),request.getContent(),request.getEndAt());
 
-        //personInCharge id 입력 여부 판단 후 Todo 객체 생성
-        Todo todo;
-        if(request.getPersonInChargeId()!=null){
+        //PersonInCharge id null, 유효 여부 판단
+        if( request.getPersonInChargeId() != null ) {
             Optional<FamilyMember> personInCharge = familyMemberService.findOne(request.getPersonInChargeId());
-            if(!personInCharge.isPresent())
+            if (!personInCharge.isPresent())
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ErrorResponse("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
-            todo = Todo.createTodo(family.get(),publisher.get(),personInCharge.get(),
-                    request.getTitle(), category.get(), request.getDifficulty(),request.getContent(),request.getEndAt());
+            todo.addPersonInCharge(personInCharge.get());
         }
-        else{
-            todo = Todo.createTodo(family.get(),publisher.get(),null,
-                    request.getTitle(), category.get(), request.getDifficulty(),request.getContent(),request.getEndAt());
+
+        //Category id null, 유효 여부 판단
+        if( request.getCategoryId() != null ) {
+            Optional<Category> category = categoryService.findOne(request.getCategoryId());
+            if (!category.isPresent())
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ErrorResponse("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
+            todo.addCategory(category.get());
         }
 
         Long savedId = todoService.save(todo);

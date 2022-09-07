@@ -78,4 +78,11 @@ public class Todo {
         this.endAt = endAt;
     }
 
+    public void addPersonInCharge(FamilyMember personInCharge){
+        this.personInCharge = personInCharge;
+    }
+
+    public void addCategory(Category category){
+        this.category = category;
+    }
 }
