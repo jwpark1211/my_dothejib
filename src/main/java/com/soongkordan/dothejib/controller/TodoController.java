@@ -182,7 +182,7 @@ public class TodoController {
         Optional<Category> category = categoryService.findOne(request.getCategoryId());
         if (!category.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+                    .body(new ErrorResponse("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
         }
 
         //personInCharge Id 유효 여부 판단 및 수정 메소드 호출
