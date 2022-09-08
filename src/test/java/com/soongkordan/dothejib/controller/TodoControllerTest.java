@@ -2,7 +2,6 @@ package com.soongkordan.dothejib.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soongkordan.dothejib.controller.dto.TodoDTO;
 import com.soongkordan.dothejib.domain.*;
 import com.soongkordan.dothejib.service.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -234,6 +233,333 @@ public class TodoControllerTest {
 
         //when
         ResultActions actions = mvc.perform(get("/families/4/todos/6"));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 목록 조회(가족단위)")
+    void getFamilyTodos() throws Exception{
+        //given
+        given(familyService.findOne(any())).willReturn(Optional.of(family));
+        given(todoService.findByFamilyIdAndEndAt(any(),any())).willReturn(todoList);
+
+        getTodoRequest request = new getTodoRequest();
+        request.setEndAt(LocalDate.now());
+        String object = objectMapper.writeValueAsString(request);
+
+
+        //when
+        ResultActions actions = mvc.perform(get("/families/1/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(3));
+    }
+
+    @Test
+    @DisplayName("Todo 목록 조회(가족단위) 예외")
+    void getFamilyTodos_exception() throws Exception{
+        //given
+        given(familyService.findOne(any())).willReturn(Optional.empty());
+        given(todoService.findByFamilyIdAndEndAt(any(),any())).willReturn(todoList);
+
+        getTodoRequest request = new getTodoRequest();
+        request.setEndAt(LocalDate.now());
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(get("/families/1/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 목록 조회(가족구성원 단위)")
+    void getFamilyMemberTodos() throws Exception{
+        //given
+        given(familyMemberService.findOne(any())).willReturn(Optional.of(familyMember1));
+        given(todoService.findByPersonInChargeIdAndEndAt(any(),any())).willReturn(todoList);
+
+        getTodoRequest request = new getTodoRequest();
+        request.setEndAt(LocalDate.now());
+        String object = objectMapper.writeValueAsString(request);
+
+
+        //when
+        ResultActions actions = mvc.perform(get("/families/1/family-members/2/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(3));
+    }
+
+    @Test
+    @DisplayName("Todo 목록 조회(가족구성원 단위) 예외")
+    void getFamilyMemeberTodos_exception() throws Exception{
+        //given
+        given(familyService.findOne(any())).willReturn(Optional.empty());
+        given(todoService.findByPersonInChargeIdAndEndAt(any(),any())).willReturn(todoList);
+
+        getTodoRequest request = new getTodoRequest();
+        request.setEndAt(LocalDate.now());
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(get("/families/1/family-members/2/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 수정")
+    void modifyTodo() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+        given(categoryService.findOne(any())).willReturn(Optional.of(category));
+        given(familyMemberService.findOne(any())).willReturn(Optional.of(familyMember1));
+
+        modifyRequest request = new modifyRequest();
+        request.setCategoryId(1L);
+        request.setPersonInChargeId(2L);
+        request.setContent("content");
+        request.setTitle("title");
+        request.setDifficulty(10);
+        request.setEndAt(LocalDate.now());
+
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(put("/families/1/todos/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("Todo 수정 예외 - todo id")
+    void modifyTodo_exception1() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(Optional.empty());
+        given(categoryService.findOne(any())).willReturn(Optional.of(category));
+        given(familyMemberService.findOne(any())).willReturn(Optional.of(familyMember1));
+
+        modifyRequest request = new modifyRequest();
+        request.setCategoryId(1L);
+        request.setPersonInChargeId(2L);
+        request.setContent("content");
+        request.setTitle("title");
+        request.setDifficulty(10);
+        request.setEndAt(LocalDate.now());
+
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(put("/families/1/todos/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 수정 예외 - category id")
+    void modifyTodo_exception2() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+        given(categoryService.findOne(any())).willReturn(Optional.empty());
+        given(familyMemberService.findOne(any())).willReturn(Optional.of(familyMember1));
+
+        modifyRequest request = new modifyRequest();
+        request.setCategoryId(1L);
+        request.setPersonInChargeId(2L);
+        request.setContent("content");
+        request.setTitle("title");
+        request.setDifficulty(10);
+        request.setEndAt(LocalDate.now());
+
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(put("/families/1/todos/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 카테고리 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 수정 예외 - personInCharge id")
+    void modifyTodo_exception3() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+        given(categoryService.findOne(any())).willReturn(Optional.of(category));
+        given(familyMemberService.findOne(any())).willReturn(Optional.empty());
+
+        modifyRequest request = new modifyRequest();
+        request.setCategoryId(1L);
+        request.setPersonInChargeId(2L);
+        request.setContent("content");
+        request.setTitle("title");
+        request.setDifficulty(10);
+        request.setEndAt(LocalDate.now());
+
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(put("/families/1/todos/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 담당자 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo 삭제")
+    void deleteTodo() throws Exception{
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+
+        //when
+        ResultActions actions = mvc.perform(delete("/families/1/todos/1"));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Todo 삭제 예외")
+    void deleteTodo_exception() throws Exception{
+        //given
+        given(todoService.findOne(any())).willReturn(Optional.empty());
+
+        //when
+        ResultActions actions = mvc.perform(delete("/families/1/todos/1"));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo Check(완료 시간 생성)")
+    void completeTodo() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+
+        CompleteRequest request  = new CompleteRequest();
+        request.setCompletedAt(LocalDateTime.now());
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(post("/families/2/todos/2/complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Todo Check(완료 시간 생성) 예외")
+    void completeTodo_exception() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(Optional.empty());
+
+        CompleteRequest request  = new CompleteRequest();
+        request.setCompletedAt(LocalDateTime.now());
+        String object = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions actions = mvc.perform(post("/families/2/todos/2/complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(object));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("Todo UnCheck(완료 시간 해제)")
+    void inCompleteTodo() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(todo1);
+
+        //when
+        ResultActions actions = mvc.perform(delete("/families/2/todos/2/complete"));
+
+        //then
+        actions
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Todo UnCheck(완료 시간 해제) 예외")
+    void inCompleteTodo_exception() throws Exception{
+
+        //given
+        given(todoService.findOne(any())).willReturn(Optional.empty());
+
+        //when
+        ResultActions actions = mvc.perform(delete("/families/2/todos/2/complete"));
 
         //then
         actions
