@@ -30,6 +30,7 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final FamilyService familyService;
 
+    /*카테고리 생성*/
     @PostMapping(path = "/families/{family-id}/categories/new", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> save(
             @PathVariable("family-id") Long familyId,
@@ -47,10 +48,11 @@ public class CategoryController {
                 .body(new CommonResponse<CommonDTO.IdResponse>(new CommonDTO.IdResponse(saveId)));
     }
 
-    @GetMapping(path = "/families/{family-id}/categories/{id}", produces = APPLICATION_JSON_VALUE)
+    /*카테고리 단일 조회*/
+    @GetMapping(path = "/families/{family-id}/categories/{category-id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getOneCategory(
             @PathVariable("family-id") Long familyId,
-            @PathVariable("id") Long categoryId
+            @PathVariable("category-id") Long categoryId
     ) {
         Optional<Category> category = categoryService.findOne(categoryId);
         if(!category.isPresent()){
@@ -65,6 +67,7 @@ public class CategoryController {
                 ));
     }
 
+    /*카테고리 목록 조회(가족 id로)*/
     @GetMapping(path = "/families/{family_id}/categories", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getAllCategories(
             @PathVariable("family_id") Long familyId

@@ -73,10 +73,10 @@ public class FamilyMemberController {
     }
 
     /*FamilyMember 단일 조회 */
-    @GetMapping(path = "/families/{family-id}/family-members/{id}",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/families/{family-id}/family-members/{family-member-id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyMember(
             @PathVariable("family-id") Long familyId,
-            @PathVariable("id") Long familyMemberId
+            @PathVariable("family-member-id") Long familyMemberId
     ){
         //familyMember Id 유효 여부 판단
         Optional<FamilyMember> familyMember = familyMemberService.findOne(familyMemberId);
@@ -113,10 +113,10 @@ public class FamilyMemberController {
 
     /*FamilyMember 정보 수정*/
     //TODO: 이미지 수정까지 한 번에 처리
-    @PatchMapping(path="/families/{family-id}/family-members/{id}",produces = APPLICATION_JSON_VALUE)
+    @PatchMapping(path="/families/{family-id}/family-members/{family-member-id}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> modifyFamilyMember(
             @PathVariable("family-id") Long familyId,
-            @PathVariable("id") Long familyMemberId,
+            @PathVariable("family-member-id") Long familyMemberId,
             @RequestBody ModifyInfoRequest request
     ){
         //familyMemberId 유효 여부 판단

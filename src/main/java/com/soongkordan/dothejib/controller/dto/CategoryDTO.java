@@ -12,9 +12,6 @@ public class CategoryDTO {
     public static class SaveRequest {
 
         @NotNull
-        private Long familyId;
-
-        @NotNull
         private String name;
 
         private String profileImg;

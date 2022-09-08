@@ -18,8 +18,6 @@ public class TodoDTO {
     @Getter @Setter
     public static class SaveRequest {
         @NotNull
-        private Long familyId;
-        @NotNull
         private Long publisherId;
         private Long personInChargeId;
         @NotEmpty
@@ -28,6 +26,7 @@ public class TodoDTO {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate endAt;
 
+        @NotNull
         private Long categoryId;
         private int difficulty;
         private String content;

@@ -56,7 +56,7 @@ public class TodoController {
             @RequestBody @Valid SaveRequest request
     ){
         //family,publisher id 유효 여부 판단
-        Optional<Family> family = familyService.findOne(request.getFamilyId());
+        Optional<Family> family = familyService.findOne(familyId);
         if(!family.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
@@ -142,6 +142,7 @@ public class TodoController {
     /*Todo 목록 조회(가족구성원 단위)*/
     @GetMapping(path = "/families/{family-id}/family-members/{family-member-id}/todos", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getFamilyMemberTodo(
+            @PathVariable("family-id") Long familyId,
             @PathVariable("family-member-id") Long personInChargeId,
             @RequestBody @Valid getTodoRequest request
     ){
@@ -235,7 +236,7 @@ public class TodoController {
                     .body(new ErrorResponse("일치하는 할 일 정보가 없습니다. id를 확인해주세요."));
 
         //완료 시간(LocalDate) 생성
-        todoService.completeTodo(todoId,request.getCompletedAt());
+        todoService.completeTodo(todoId, request.getCompletedAt());
         return ResponseEntity.ok().build(); //return : 200
     }
 

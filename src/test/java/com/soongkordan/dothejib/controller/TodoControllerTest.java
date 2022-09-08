@@ -91,7 +91,6 @@ public class TodoControllerTest {
         request.setCategoryId(1L);
         request.setPersonInChargeId(2L);
         request.setPublisherId(3L);
-        request.setFamilyId(4L);
 
         String object = objectMapper.writeValueAsString(request);
 
@@ -124,7 +123,6 @@ public class TodoControllerTest {
         request.setCategoryId(1L);
         request.setPersonInChargeId(2L);
         request.setPublisherId(3L);
-        request.setFamilyId(4L);
 
         String object = objectMapper.writeValueAsString(request);
 
@@ -157,7 +155,6 @@ public class TodoControllerTest {
         request.setCategoryId(1L);
         request.setPersonInChargeId(2L);
         request.setPublisherId(3L);
-        request.setFamilyId(4L);
 
         String object = objectMapper.writeValueAsString(request);
 
@@ -174,7 +171,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    @DisplayName("투두 생성 - 예외: 가족 구성원 정보 없음")
+    @DisplayName("투두 생성 - 예외: 카테고리 정보 없음")
     void save_exception3() throws Exception{
 
         //given
@@ -190,7 +187,6 @@ public class TodoControllerTest {
         request.setCategoryId(1L);
         request.setPersonInChargeId(2L);
         request.setPublisherId(3L);
-        request.setFamilyId(4L);
 
         String object = objectMapper.writeValueAsString(request);
 
