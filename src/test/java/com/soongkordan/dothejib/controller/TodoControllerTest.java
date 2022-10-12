@@ -55,8 +55,10 @@ public class TodoControllerTest {
             .password("password")
             .build();
     Family family = Family.builder().name("familyName").build();
-    FamilyMember familyMember1 = FamilyMember.createFamilyMember(member1,family,"name","profileImg");
-    FamilyMember familyMember2 = FamilyMember.createFamilyMember(member2,family,"name","profileImg");
+    FamilyMember familyMember1 = FamilyMember.builder()
+            .member(member1).family(family).name("name").profileImg("profileImg").build();
+    FamilyMember familyMember2 = FamilyMember.builder()
+            .member(member2).family(family).name("name").profileImg("profileImg").build();
     Category category  = Category.createCategory(family,"name","profileImg","description");
 
     List<Todo> todoList = new ArrayList<>();

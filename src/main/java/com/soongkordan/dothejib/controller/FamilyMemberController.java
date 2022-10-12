@@ -64,7 +64,12 @@ public class FamilyMemberController {
 
         //FamilyMember 객체 생성
         FamilyMember familyMember =
-                FamilyMember.createFamilyMember(member.get(),family.get(),request.getName(),request.getProfileImg());
+                FamilyMember.builder()
+                        .member(member.get())
+                        .family(family.get())
+                        .name(request.getName())
+                        .profileImg(request.getProfileImg())
+                        .build();
         familyMemberService.save(familyMember);
 
         return ResponseEntity.ok()

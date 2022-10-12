@@ -209,7 +209,7 @@ public class TodoServiceTest {
 
     private FamilyMember getFamilyMember(Member member, Family family, String nameFm) {
         FamilyMember familyMember =
-                FamilyMember.createFamilyMember(member, family, nameFm, "profileImg");
+                FamilyMember.builder().member(member).family(family).name(nameFm).profileImg("profileImg").build();
         familyMemberService.save(familyMember);
         return familyMember;
     }

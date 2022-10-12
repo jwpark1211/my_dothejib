@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -24,15 +25,12 @@ public class FamilyMember {
     private String name;
     private String profileImg;
 
-    public static FamilyMember createFamilyMember(
-            Member member, Family family, String name, String profileImg
-    ){
-        FamilyMember familyMember = new FamilyMember();
-        familyMember.member = member;
-        familyMember.family = family;
-        familyMember.name = name;
-        familyMember.profileImg = profileImg;
-        return familyMember;
+    @Builder
+    public FamilyMember (Member member, Family family, String name, String profileImg){
+        this.member = member;
+        this.family = family;
+        this.name = name;
+        this.profileImg = profileImg;
     }
 
     public void modifyName(String name){

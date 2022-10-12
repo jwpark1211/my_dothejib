@@ -58,10 +58,13 @@ public class FamilyMemberControllerTest {
     Family family = Family.builder().name("name").build();
 
     List<FamilyMember> familyMembers = new ArrayList<>();
+
     Optional<FamilyMember> familyMember1
-            = Optional.of(FamilyMember.createFamilyMember(member1,family,"name1","profileImg"));
+            = Optional.of(FamilyMember.builder()
+            .member(member1).family(family).name("name1").profileImg("profileImg").build());
     Optional<FamilyMember> familyMember2
-            = Optional.of(FamilyMember.createFamilyMember(member2,family,"name2","profileImg"));
+            = Optional.of(FamilyMember.builder()
+            .member(member2).family(family).name("name2").profileImg("profileImg").build());
     Optional<FamilyMember> nullFamilyMember = Optional.empty();
 
 
