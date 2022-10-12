@@ -33,8 +33,15 @@ public class TodoServiceTest {
         Category category = getCategory(family, "Category1");
         FamilyMember familyMember = getFamilyMember(member, family, "fmName");
         Todo todo =
-                Todo.createTodo(family,familyMember, null,
-                        "title", category,1,"content", LocalDate.now());
+                Todo.builder()
+                        .family(family)
+                        .publisher(familyMember)
+                        .title("title")
+                        .category(category)
+                        .difficulty(1)
+                        .content("content")
+                        .endAt(LocalDate.now())
+                        .build();
 
         // when
         todoService.save(todo);
@@ -216,8 +223,17 @@ public class TodoServiceTest {
 
     private Todo getTodo(String title, Category category, Family family, FamilyMember familyMember) {
         Todo todo =
-                Todo.createTodo(family,familyMember, familyMember,
-                        "title", category,1,"content", LocalDate.of(2022,4,25));
+                Todo.builder()
+                        .family(family)
+                        .personInCharge(familyMember)
+                        .publisher(familyMember)
+                        .title("title1")
+                        .category(category)
+                        .difficulty(1)
+                        .content("content")
+                        .endAt(LocalDate.of(2022,4,25))
+                        .build();
+
         todoService.save(todo);
         return todo;
     }

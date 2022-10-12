@@ -63,12 +63,12 @@ public class TodoControllerTest {
 
     List<Todo> todoList = new ArrayList<>();
 
-    Optional<Todo> todo1 = Optional.of(Todo.createTodo(family,familyMember1,familyMember1,"title1",category,10,
-            "content",LocalDate.now()));
-    Optional<Todo> todo2 = Optional.of(Todo.createTodo(family,familyMember1,familyMember1,"title2",category,10,
-            "content",LocalDate.now()));
-    Optional<Todo> todo3 = Optional.of(Todo.createTodo(family,familyMember1,familyMember1,"title3",category,10,
-            "content",LocalDate.now()));
+    Optional<Todo> todo1 = Optional.of(Todo.builder().family(family).publisher(familyMember1).personInCharge(familyMember1)
+            .title("title1").category(category).difficulty(10).content("content").endAt(LocalDate.now()).build());
+    Optional<Todo> todo2 = Optional.of(Todo.builder().family(family).publisher(familyMember1).personInCharge(familyMember1)
+            .title("title2").category(category).difficulty(10).content("content").endAt(LocalDate.now()).build());
+    Optional<Todo> todo3 = Optional.of(Todo.builder().family(family).publisher(familyMember1).personInCharge(familyMember1)
+            .title("title3").category(category).difficulty(10).content("content").endAt(LocalDate.now()).build());
 
     @BeforeEach
     void setUp(@Autowired TodoController todoController){

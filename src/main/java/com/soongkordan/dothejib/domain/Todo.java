@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -38,21 +39,18 @@ public class Todo {
     private LocalDate endAt; //마감기한
     private LocalDateTime completedAt; //성취날짜
 
-    public static Todo createTodo(
-            Family family, FamilyMember publisher, FamilyMember personInCharge ,
-            String title, Category category, int difficulty, String content, LocalDate endAt
-    ){
-        Todo todo = new Todo();
-        todo.family = family;
-        todo.publisher = publisher;
-        todo.personInCharge = personInCharge;
-        todo.title = title;
-        todo.category = category;
-        todo.difficulty = difficulty;
-        todo.content = content;
-        todo.endAt = endAt;
-
-        return todo;
+    @Builder
+    public Todo( Family family, FamilyMember personInCharge, Category category,
+                FamilyMember publisher, String title, int difficulty, String content, LocalDate endAt, LocalDateTime completedAt) {
+        this.family = family;
+        this.personInCharge = personInCharge;
+        this.category = category;
+        this.publisher = publisher;
+        this.title = title;
+        this.difficulty = difficulty;
+        this.content = content;
+        this.endAt = endAt;
+        this.completedAt = completedAt;
     }
 
     public void completeTodo(LocalDateTime completedAt){

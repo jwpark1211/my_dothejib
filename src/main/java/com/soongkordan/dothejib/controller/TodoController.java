@@ -67,8 +67,14 @@ public class TodoController {
                     .body(new ErrorResponse("일치하는 발행자 정보가 없습니다. id를 확인해주세요."));
 
         //todo 생성
-        Todo todo = Todo.createTodo(family.get(),publisher.get(),null,request.getTitle(),
-                null,request.getDifficulty(),request.getContent(),request.getEndAt());
+        Todo todo = Todo.builder()
+                .family(family.get())
+                .publisher(publisher.get())
+                .title(request.getTitle())
+                .difficulty(request.getDifficulty())
+                .content(request.getContent())
+                .endAt(request.getEndAt())
+                .build();
 
         //PersonInCharge id null, 유효 여부 판단
         if( request.getPersonInChargeId() != null ) {
