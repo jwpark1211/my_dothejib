@@ -198,7 +198,11 @@ public class TodoServiceTest {
     }
 
     private Member getMember(String email) {
-        Member member = Member.createMember(email, "password");
+        Member member = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email(email)
+                .password("password")
+                .build();
         memberService.join(member);
         return member;
     }

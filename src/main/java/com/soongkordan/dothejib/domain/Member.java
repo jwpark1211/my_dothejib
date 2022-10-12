@@ -1,13 +1,11 @@
 package com.soongkordan.dothejib.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity @Getter
 public class Member {
@@ -18,10 +16,14 @@ public class Member {
     private String email;
     private String password;
 
-    public static Member createMember(String email, String password){
-        Member member = new Member();
-        member.email = email;
-        member.password = password;
-        return member;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    @Builder
+    public Member (String email, String password, Authority authority){
+        this.email = email;
+        this.password = password;
+        this.authority = authority;
     }
+
 }

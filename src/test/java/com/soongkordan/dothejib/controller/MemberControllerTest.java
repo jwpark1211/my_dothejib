@@ -2,6 +2,7 @@ package com.soongkordan.dothejib.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soongkordan.dothejib.domain.Authority;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,11 @@ public class MemberControllerTest {
     @Autowired private ObjectMapper objectMapper;
 
     List<Member> members = new ArrayList<>();
-     Optional<Member> member = Optional.of(Member.createMember("email@google.com", "password"));
+     Optional<Member> member = Optional.of(Member.builder()
+             .authority(Authority.ROLE_USER)
+             .email("email@google.com")
+             .password("password")
+             .build());
      Optional<Member> nullMember = Optional.empty();
 
     @BeforeEach
@@ -42,11 +47,31 @@ public class MemberControllerTest {
         //MockMvc
         mvc = MockMvcBuilders.standaloneSetup(memberController).build();
         //MockMembers
-        members.add(Member.createMember("email1@google.com","password"));
-        members.add(Member.createMember("email2@google.com","password"));
-        members.add(Member.createMember("email3@google.com","password"));
-        members.add(Member.createMember("email4@google.com","password"));
-        members.add(Member.createMember("email5@google.com","password"));
+        members.add(Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email1@google.com")
+                .password("password")
+                .build());
+        members.add(Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email2@google.com")
+                .password("password")
+                .build());
+        members.add(Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email3@google.com")
+                .password("password")
+                .build());
+        members.add(Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email4@google.com")
+                .password("password")
+                .build());
+        members.add(Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email5@google.com")
+                .password("password")
+                .build());
     }
 
     public String toJsonString(Member member) throws JsonProcessingException{

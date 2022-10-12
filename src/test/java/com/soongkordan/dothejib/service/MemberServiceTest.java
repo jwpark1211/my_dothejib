@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.domain.Authority;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,11 @@ class MemberServiceTest {
     @Test
     void 회원가입_단일회원검색() {
         // given
-        Member member = Member.createMember("test@google.com", "password");
+        Member member = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("test@google.com")
+                .password("password")
+                .build();
 
         // when
         Long savedId = memberService.join(member);
@@ -33,11 +38,23 @@ class MemberServiceTest {
     @Test
     void 모든_회원_검색() {
         // given
-        Member member1 = Member.createMember("test@google1.com", "password");
+        Member member1 = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("test1@google.com")
+                .password("password")
+                .build();
         memberService.join(member1);
-        Member member2 = Member.createMember("test@google2.com", "password");
+        Member member2 = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("test2@google.com")
+                .password("password")
+                .build();
         memberService.join(member2);
-        Member member3 = Member.createMember("test@google3.com", "password");
+        Member member3 = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("test3@google.com")
+                .password("password")
+                .build();
         memberService.join(member3);
 
         // when
@@ -50,7 +67,11 @@ class MemberServiceTest {
     @Test
     void 회원저장(){
         //given
-        Member member1 = Member.createMember("email@google.com","password");
+        Member member1 = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("email@google.com")
+                .password("password")
+                .build();
 
         //when
         Long savedId = memberService.join(member1);
@@ -63,7 +84,11 @@ class MemberServiceTest {
     @Test
     void 이메일로_회원_조회(){
         // given
-        Member member = Member.createMember("test@google.com", "password");
+        Member member = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email("test@google.com")
+                .password("password")
+                .build();
 
         // when
         Long savedId = memberService.join(member);

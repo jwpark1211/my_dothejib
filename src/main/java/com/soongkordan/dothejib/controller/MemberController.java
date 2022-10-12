@@ -4,6 +4,7 @@ import com.soongkordan.dothejib.controller.dto.*;
 import com.soongkordan.dothejib.controller.exception.BasicResponse;
 import com.soongkordan.dothejib.controller.exception.CommonResponse;
 import com.soongkordan.dothejib.controller.exception.ErrorResponse;
+import com.soongkordan.dothejib.domain.Authority;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,12 @@ public class MemberController {
     public CommonDTO.IdResponse saveMember(
             @RequestBody @Valid Request request
     ){
-        Member member = Member.createMember(request.getEmail(),request.getPassword());
+        Member member = Member.builder()
+                .authority(Authority.ROLE_USER)
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+
         Long savedId = memberService.join(member);
 
         return new CommonDTO.IdResponse(savedId);

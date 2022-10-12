@@ -3,6 +3,7 @@ package com.soongkordan.dothejib.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soongkordan.dothejib.controller.dto.FamilyMemberDTO;
+import com.soongkordan.dothejib.domain.Authority;
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
 import com.soongkordan.dothejib.domain.Member;
@@ -44,8 +45,16 @@ public class FamilyMemberControllerTest {
     @MockBean private MemberService memberService;
     @Autowired private ObjectMapper objectMapper;
 
-    Member member1 = Member.createMember("email@google.com", "password");
-    Member member2 = Member.createMember("email2@google.com","password");
+    Member member1 = Member.builder()
+            .authority(Authority.ROLE_USER)
+            .email("email@google.com")
+            .password("password")
+            .build();
+    Member member2 = Member.builder()
+            .authority(Authority.ROLE_USER)
+            .email("email2@google.com")
+            .password("password")
+            .build();
     Family family = Family.createFamily("name");
 
     List<FamilyMember> familyMembers = new ArrayList<>();

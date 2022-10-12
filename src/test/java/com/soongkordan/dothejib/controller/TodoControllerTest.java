@@ -44,8 +44,16 @@ public class TodoControllerTest {
 
     @Autowired private ObjectMapper objectMapper;
 
-    Member member1 = Member.createMember("email1@gmail.com","password");
-    Member member2 = Member.createMember("email2@gmail.com","password");
+    Member member1 = Member.builder()
+            .authority(Authority.ROLE_USER)
+            .email("email1@google.com")
+            .password("password")
+            .build();
+    Member member2 = Member.builder()
+            .authority(Authority.ROLE_USER)
+            .email("email2@google.com")
+            .password("password")
+            .build();
     Family family = Family.createFamily("familyName");
     FamilyMember familyMember1 = FamilyMember.createFamilyMember(member1,family,"name","profileImg");
     FamilyMember familyMember2 = FamilyMember.createFamilyMember(member2,family,"name","profileImg");
