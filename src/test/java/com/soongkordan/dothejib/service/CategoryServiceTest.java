@@ -24,7 +24,13 @@ public class CategoryServiceTest {
     public void save_and_findOne() {
         // given
         Family family = getFamily("testFam");
-        Category category = Category.createCategory(family, "some category", "", "desc");
+
+        Category category = Category.builder()
+                .family(family)
+                .profileImg("")
+                .description("desc")
+                .name("some category")
+                .build();
 
         // when
         categoryService.save(category);
@@ -50,7 +56,12 @@ public class CategoryServiceTest {
     }
 
     private Category getCategory(Family family, String name){
-        Category category = Category.createCategory(family, name, "", "desc");
+        Category category = Category.builder()
+                .family(family)
+                .name(name)
+                .profileImg("")
+                .description("desc")
+                .build();
         categoryService.save(category);
         return category;
     }

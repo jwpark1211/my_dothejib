@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -18,21 +19,14 @@ public class Category {
     private Family family;
 
     private String name;
-
     private String profileImg;
-
     private String description;
 
-    public static Category createCategory(
-        Family family, String name, String profileImg, String description
-    ){
-        Category category = new Category();
-        category.family = family;
-        category.name = name;
-        category.profileImg = profileImg;
-        category.description = description;
-
-        return category;
+    @Builder
+    public Category( Family family, String name, String profileImg, String description) {
+        this.family = family;
+        this.name = name;
+        this.profileImg = profileImg;
+        this.description = description;
     }
-
 }

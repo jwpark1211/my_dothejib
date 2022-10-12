@@ -42,7 +42,12 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND) //return : 404
                     .body(new ErrorResponse("일치하는 가족 정보가 없습니다. id를 확인해주세요."));
 
-        Category category = Category.createCategory(family.get(), request.getName(), request.getProfileImg(), request.getDescription());
+        Category category = Category.builder()
+                .family(family.get())
+                .name(request.getName())
+                .profileImg(request.getProfileImg())
+                .description(request.getDescription())
+                .build();
         Long saveId = categoryService.save(category);
         return ResponseEntity.ok()
                 .body(new CommonResponse<CommonDTO.IdResponse>(new CommonDTO.IdResponse(saveId)));
