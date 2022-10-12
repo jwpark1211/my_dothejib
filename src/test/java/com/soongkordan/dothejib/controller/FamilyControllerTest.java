@@ -34,7 +34,7 @@ public class FamilyControllerTest {
     @MockBean private FamilyService familyService;
     @Autowired private ObjectMapper objectMapper;
 
-    Optional<Family> family = Optional.of(Family.createFamily("name"));
+    Optional<Family> family = Optional.of(Family.builder().name("name").build());
     Optional<Family> nullFamily = Optional.empty();
 
     @BeforeEach

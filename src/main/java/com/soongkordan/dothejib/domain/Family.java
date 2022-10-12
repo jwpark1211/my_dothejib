@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -21,10 +22,9 @@ public class Family {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public static Family createFamily(String name){
-        Family family = new Family();
-        family.name = name;
-        return family;
+    @Builder
+    public Family (String name){
+        this.name = name;
     }
 
     public void modifyName(String name){

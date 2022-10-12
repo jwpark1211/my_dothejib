@@ -37,7 +37,7 @@ public class FamilyController {
             @RequestBody @Valid Request request
     ){
         //family 객체 생성
-        Family family = Family.createFamily(request.getName());
+        Family family = Family.builder().name(request.getName()).build();
         Long savedId = familyService.save(family);
 
        return ResponseEntity.ok()

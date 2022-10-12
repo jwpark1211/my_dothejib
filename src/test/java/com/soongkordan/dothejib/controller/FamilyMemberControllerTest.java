@@ -55,7 +55,7 @@ public class FamilyMemberControllerTest {
             .email("email2@google.com")
             .password("password")
             .build();
-    Family family = Family.createFamily("name");
+    Family family = Family.builder().name("name").build();
 
     List<FamilyMember> familyMembers = new ArrayList<>();
     Optional<FamilyMember> familyMember1

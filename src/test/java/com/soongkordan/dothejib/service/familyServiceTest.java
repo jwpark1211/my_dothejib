@@ -20,7 +20,7 @@ public class familyServiceTest {
     @Test
     void 가족생성and가족단일검색(){
         //given
-        Family family = Family.createFamily("name");
+        Family family = Family.builder().name("name").build();
         Long savedId = familyService.save(family);
 
         //when
@@ -33,7 +33,7 @@ public class familyServiceTest {
     @Test
     void 이름으로_가족_조회(){
         //given
-        Family family = Family.createFamily("name");
+        Family family = Family.builder().name("name").build();
         Long savedId = familyService.save(family);
 
         //when
@@ -46,7 +46,7 @@ public class familyServiceTest {
     @Test
     void 가족정보_수정(){
         //given
-        Family family = Family.createFamily("name");
+        Family family = Family.builder().name("name").build();
         Long savedId = familyService.save(family);
 
         //when

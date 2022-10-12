@@ -54,7 +54,7 @@ public class TodoControllerTest {
             .email("email2@google.com")
             .password("password")
             .build();
-    Family family = Family.createFamily("familyName");
+    Family family = Family.builder().name("familyName").build();
     FamilyMember familyMember1 = FamilyMember.createFamilyMember(member1,family,"name","profileImg");
     FamilyMember familyMember2 = FamilyMember.createFamilyMember(member2,family,"name","profileImg");
     Category category  = Category.createCategory(family,"name","profileImg","description");

@@ -56,7 +56,7 @@ public class CategoryServiceTest {
     }
 
     private Family getFamily(String name) {
-        Family family = Family.createFamily(name);
+        Family family = Family.builder().name(name).build();
         familyService.save(family);
         return family;
     }
