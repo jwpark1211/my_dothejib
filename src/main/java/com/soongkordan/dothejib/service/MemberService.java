@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.controller.dto.MemberDTO;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.soongkordan.dothejib.controller.dto.MemberDTO.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,36 +20,30 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    /*
-    * join : Long
-    * findOne : Optional<Member>
-    * findByEmail : Optional<Member>
-    * findMembers :  List<Member>
-     */
+    //email 로 유저 정보 찾아오기
+    public Response getMemberInfoWithEmail(String email){
+        return memberRepository.findByEmail(email)
+                .map(Response::of)
+                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+    }
 
-    @Transactional
-    public Long join(Member member){
-        validateDuplicateMember(member);
+    //member Id로 유저 정보 찾아오기
+    public Response getMemberInfoWithId(Long memberId){
+        return memberRepository.findById(memberId)
+                .map(Response::of)
+                .orElseThrow(()-> new RuntimeException("유저 정보가 없습니다."));
+    }
+
+    //모든 member 반환하기
+    public List<Response> getAllMembers(){
+        return  memberRepository.findAll().stream()
+                .map(m -> new Response(m.getId(),m.getEmail()))
+                .collect(Collectors.toList());
+    }
+
+    public Long saveMember(Member member){
         memberRepository.save(member);
         return member.getId();
     }
 
-    public Optional<Member> findOne(Long memberId) {
-        return memberRepository.findById(memberId);
-    }
-
-    public Optional<Member> findByEmail(String email){
-        return memberRepository.findByEmail(email);
-    }
-
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
-    }
-
-    private void validateDuplicateMember(Member member) {
-        Optional<Member> findMembers = memberRepository.findByEmail(member.getEmail());
-        if (!findMembers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
-    }
 }

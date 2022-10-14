@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.controller.dto.MemberDTO;
 import com.soongkordan.dothejib.domain.Authority;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.repository.MemberRepository;
@@ -20,80 +21,47 @@ class MemberServiceTest {
     MemberService memberService;
 
     @Test
-    void 회원가입_단일회원검색() {
-        // given
-        Member member = Member.builder()
-                .authority(Authority.ROLE_USER)
-                .email("test@google.com")
-                .password("password")
-                .build();
-
-        // when
-        Long savedId = memberService.join(member);
-
-        // then
-        assertEquals(member, memberService.findOne(savedId).get());
-    }
-
-    @Test
-    void 모든_회원_검색() {
-        // given
-        Member member1 = Member.builder()
-                .authority(Authority.ROLE_USER)
-                .email("test1@google.com")
-                .password("password")
-                .build();
-        memberService.join(member1);
-        Member member2 = Member.builder()
-                .authority(Authority.ROLE_USER)
-                .email("test2@google.com")
-                .password("password")
-                .build();
-        memberService.join(member2);
-        Member member3 = Member.builder()
-                .authority(Authority.ROLE_USER)
-                .email("test3@google.com")
-                .password("password")
-                .build();
-        memberService.join(member3);
-
-        // when
-        List<Member> members = memberService.findMembers();
-
-        // then
-        assertEquals(3, members.size());
-    }
-
-    @Test
-    void 회원저장(){
+    void 회원단일검색_ID(){
         //given
-        Member member1 = Member.builder()
-                .authority(Authority.ROLE_USER)
-                .email("email@google.com")
-                .password("password")
-                .build();
+        Member member = getMember("test@gmail.com","password");
+        //when
+        Long savedId = memberService.saveMember(member);
+        //then
+        assertEquals(member.getEmail(),memberService.getMemberInfoWithId(savedId).getEmail());
+    }
+    @Test
+    void 회원단일검색_EMAIL(){
+        //given
+        Member member = getMember("test@gmail.com","password");
+        //when
+        Long savedId = memberService.saveMember(member);
+        //then
+        assertEquals(member.getEmail(),memberService.getMemberInfoWithEmail("test@gmail.com").getEmail());
+    }
+    @Test
+    void 모든회원검색(){
+        //given
+        List<MemberDTO.Response> initMembers = memberService.getAllMembers();
+
+        Member member1 = getMember("test1@gmail.com","password");
+        Member member2 = getMember("test2@gmail.com","password");
+        Member member3 = getMember("test3@gmail.com","password");
+        memberService.saveMember(member1);
+        memberService.saveMember(member2);
+        memberService.saveMember(member3);
 
         //when
-        Long savedId = memberService.join(member1);
-        Member findMember = memberService.findOne(savedId).get();
+        List<MemberDTO.Response> membersInfoList = memberService.getAllMembers();
 
         //then
-        assertEquals(findMember,member1);
+        assertEquals(member1.getEmail(),membersInfoList.get(initMembers.size()).getEmail());
     }
 
-    @Test
-    void 이메일로_회원_조회(){
-        // given
-        Member member = Member.builder()
+    private Member getMember(String email, String password){
+        return Member.builder()
+                .email(email)
+                .password(password)
                 .authority(Authority.ROLE_USER)
-                .email("test@google.com")
-                .password("password")
                 .build();
-
-        // when
-        Long savedId = memberService.join(member);
-
-        // then
-        assertEquals(member, memberService.findByEmail(member.getEmail()).get());
     }
 }
