@@ -2,6 +2,7 @@ package com.soongkordan.dothejib.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 //TODO: 루틴 구현
 public class Todo {
 

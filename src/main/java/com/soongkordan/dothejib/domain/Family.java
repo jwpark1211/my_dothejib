@@ -2,6 +2,7 @@ package com.soongkordan.dothejib.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Family {
 
     @Id @Column(name="family_id")
