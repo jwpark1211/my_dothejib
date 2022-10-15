@@ -1,5 +1,6 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.controller.dto.FamilyDTO;
 import com.soongkordan.dothejib.domain.Family;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.soongkordan.dothejib.controller.dto.FamilyDTO.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,41 +20,30 @@ public class familyServiceTest {
     @Autowired FamilyService familyService;
 
     @Test
-    void 가족생성and가족단일검색(){
+    void 가족생성_가족단일검색(){
         //given
-        Family family = Family.builder().name("name").build();
-        Long savedId = familyService.save(family);
-
+        SaveRequest request = new SaveRequest();
+        request.setName("familyName");
         //when
-        Family find = familyService.findOne(savedId).get();
-
+        IdResponse response = familyService.saveFamily(request);
         //then
-        assertEquals(find,family);
+        assertEquals(familyService.getFamilyInfoWithId(response.getId()).getName(), "familyName");
     }
-
     @Test
-    void 이름으로_가족_조회(){
+    void 가족정보수정(){
         //given
-        Family family = Family.builder().name("name").build();
-        Long savedId = familyService.save(family);
+        SaveRequest saveRequest = new SaveRequest();
+        saveRequest.setName("familyName");
+
+        IdResponse response = familyService.saveFamily(saveRequest);
+
+        ModifyRequest modifyRequest = new ModifyRequest();
+        modifyRequest.setName("modifyName");
 
         //when
-        Family find = familyService.findByName("name").get();
+        familyService.modifyFamilyInfo(response.getId(),modifyRequest);
 
         //then
-        assertEquals(find,family);
-    }
-
-    @Test
-    void 가족정보_수정(){
-        //given
-        Family family = Family.builder().name("name").build();
-        Long savedId = familyService.save(family);
-
-        //when
-        familyService.modifyFamilyInfo(savedId,"modify");
-
-        //then
-        assertEquals("modify",family.getName());
+        assertEquals(familyService.getFamilyInfoWithId(response.getId()).getName(), "modifyName");
     }
 }

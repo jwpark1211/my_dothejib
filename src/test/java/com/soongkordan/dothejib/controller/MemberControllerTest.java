@@ -87,7 +87,7 @@ public class MemberControllerTest {
     @DisplayName("멤버 아이디로 단일 조회 - 예외")
     void findMemberWithId_Exception() throws Exception{
         //given
-        given (memberService.getMemberInfoWithId(any())).willThrow(new RuntimeException("유저 정보가 없습니다."));
+        given (memberService.getMemberInfoWithId(any())).willThrow(new IllegalArgumentException("유저 정보가 없습니다."));
 
         //when
         ResultActions actions = mvc.perform(get("/member/1"));
@@ -122,7 +122,7 @@ public class MemberControllerTest {
     @DisplayName("멤버 이메일로 단일 조회 - 예외")
     void findMemberWithEmail_Exception() throws Exception{
         //given
-        given (memberService.getMemberInfoWithEmail(any())).willThrow(new RuntimeException("유저 정보가 없습니다."));
+        given (memberService.getMemberInfoWithEmail(any())).willThrow(new IllegalArgumentException("유저 정보가 없습니다."));
 
         //when
         ResultActions actions = mvc.perform(get("/member/email/noEmail@gmail.com"));

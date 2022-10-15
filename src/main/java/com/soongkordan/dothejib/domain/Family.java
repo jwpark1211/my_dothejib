@@ -25,11 +25,12 @@ public class Family {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder
-    public Family (String name){
+    public Family (String name, LocalDateTime createdAt){
         this.name = name;
+        this.createdAt = createdAt;
     }
 
-    public void modifyName(String name){
+    public void update(String name){
         this.name = name;
     }
 }
