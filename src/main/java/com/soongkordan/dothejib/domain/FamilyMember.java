@@ -35,11 +35,9 @@ public class FamilyMember {
         this.profileImg = profileImg;
     }
 
-    public void modifyName(String name){
+    public void update(String name,String profileImg){
         this.name = name;
-    }
-
-    public void modifyProfileImg(String profileImg){
         this.profileImg = profileImg;
     }
+
 }

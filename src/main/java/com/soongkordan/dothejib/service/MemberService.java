@@ -37,7 +37,7 @@ public class MemberService {
     //모든 member 반환하기
     public List<Response> getAllMembers(){
         return  memberRepository.findAll().stream()
-                .map(m -> new Response(m.getId(),m.getEmail()))
+                .map(Response::of)
                 .collect(Collectors.toList());
     }
 
