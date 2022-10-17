@@ -2,13 +2,18 @@ package com.soongkordan.dothejib.service;
 
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
+import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.repository.FamilyMemberRepository;
+import com.soongkordan.dothejib.repository.FamilyRepository;
+import com.soongkordan.dothejib.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.soongkordan.dothejib.controller.dto.FamilyMemberDTO.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,53 +21,58 @@ import java.util.Optional;
 public class FamilyMemberService {
 
     private final FamilyMemberRepository familyMemberRepository;
-
-    /*
-    * save : Long
-    * findOne : Optional<FamilyMember>
-    * findByFamilyId : List<FamilyMember>
-    * findByMemberId : List<FamilyMember>
-    * findByFamilyIdAndMemberId : Optional<FamilyMember>
-    * modifyFamilyMemberInfo : void
-     */
+    private final MemberRepository memberRepository;
+    private final FamilyRepository familyRepository;
 
     @Transactional
-    public Long save(FamilyMember familyMember){
-        validateDuplicateFamilyMember(familyMember);
+    public IdResponse saveFamilyMember(SaveRequest request,Long familyId){
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(()->new IllegalArgumentException("가족 정보가 없습니다."));
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(()-> new IllegalArgumentException("유저 정보가 없습니다."));
+        boolean duplicated = familyMemberRepository.existsByFamilyIdAndMemberId(familyId, member.getId());
+        if(duplicated==false)
+        {
+            FamilyMember familyMember = FamilyMember.builder()
+                    .member(member)
+                    .family(family)
+                    .name(request.getName())
+                    .profileImg(request.getProfileImg())
+                    .build();
         familyMemberRepository.save(familyMember);
-        return familyMember.getId();
+        return new IdResponse(familyMember.getId());
+        }else
+            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
     }
 
-    public Optional<FamilyMember> findOne(Long familyMemberId){
-        return familyMemberRepository.findById(familyMemberId);
+    public FamilyMemberInfoResponse getFamilyMemberInfoWithId(Long familyMemberId){
+        return familyMemberRepository.findById(familyMemberId)
+                .map(FamilyMemberInfoResponse::of)
+                .orElseThrow(()-> new IllegalArgumentException("가족 구성원 정보가 없습니다."));
     }
 
-    public List<FamilyMember> findByFamilyId(Long familyId){
-        return familyMemberRepository.findByFamilyId(familyId);
+    public List<FamilyMemberInfoResponse> getFamilyMembersInfoWithFamilyId(Long familyId){
+        return familyMemberRepository.findByFamilyId(familyId).stream()
+                .map(FamilyMemberInfoResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public List<FamilyMember> findByMemberId(Long memberId){
-         return familyMemberRepository.findByMemberId(memberId);
+    public List<FamilyMemberInfoResponse> getFamilyMemberInfoWithMemberId(Long memberId){
+        return familyMemberRepository.findByMemberId(memberId).stream()
+                .map(FamilyMemberInfoResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Optional<FamilyMember> findByFamilyIdAndMemberId(Long familyId, Long memberId){
-        return familyMemberRepository.findByFamilyIdAndMemberId(familyId,memberId);
+    public FamilyMemberInfoResponse getFamilyMemberInfoWithFamilyIdAndMemberId(Long familyId, Long memberId){
+        return familyMemberRepository.findByFamilyIdAndMemberId(familyId, memberId)
+                .map(FamilyMemberInfoResponse::of)
+                .orElseThrow(()-> new IllegalArgumentException("가족 구성원 정보가 없습니다."));
     }
 
     @Transactional
-    public void modifyFamilyMemberInfo(Long familyMemberId, String name){
-        Optional<FamilyMember> familyMember = familyMemberRepository.findById(familyMemberId);
-        familyMember.get().modifyName(name);
-    }
-
-    // TODO: 에러 메시지 수정
-    private void validateDuplicateFamilyMember(FamilyMember familyMember){
-        Long memberId = familyMember.getMember().getId();
-        Long familyId = familyMember.getFamily().getId();
-        Optional<FamilyMember> find =
-                familyMemberRepository.findByFamilyIdAndMemberId(familyId,memberId);
-        if(!find.isEmpty()){
-            throw new IllegalStateException("이미 해당 그룹에 가입되어 있습니다.");
-        }
+    public void modifyFamilyMemberInfo(Long familyMemberId, ModifyInfoRequest request){
+        FamilyMember familyMember = familyMemberRepository.findById(familyMemberId)
+                .orElseThrow(()->new IllegalArgumentException("가족 구성원 정보가 없습니다."));
+        familyMember.update(request.getName(),request.getProfileImg());
     }
 }
