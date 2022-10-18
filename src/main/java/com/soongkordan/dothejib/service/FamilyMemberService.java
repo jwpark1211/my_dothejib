@@ -52,6 +52,9 @@ public class FamilyMemberService {
     }
 
     public List<FamilyMemberInfoResponse> getFamilyMembersInfoWithFamilyId(Long familyId){
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(()->new IllegalArgumentException("가족 정보가 없습니다."));
+
         return familyMemberRepository.findByFamilyId(familyId).stream()
                 .map(FamilyMemberInfoResponse::of)
                 .collect(Collectors.toList());

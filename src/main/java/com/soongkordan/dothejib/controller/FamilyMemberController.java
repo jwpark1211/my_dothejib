@@ -48,7 +48,7 @@ public class FamilyMemberController {
     }
 
     /*FamilyMember 전체 조회 ( Family 소속 )*/
-    @GetMapping(path = "/family/{family-id}/family-member",produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/family/{family-id}/family-member/all",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> getAllFamilyMembersWithFamilyId(
             @PathVariable("family-id") Long familyId
     ){
