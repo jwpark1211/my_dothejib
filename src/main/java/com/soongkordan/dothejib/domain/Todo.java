@@ -67,7 +67,7 @@ public class Todo {
         this.completedAt = null;
     }
 
-    public void modifyTodoInfo(
+    public void update(
             FamilyMember personInCharge, String title, Category category, String content,int difficulty,LocalDate endAt
     ){
         this.personInCharge = personInCharge;

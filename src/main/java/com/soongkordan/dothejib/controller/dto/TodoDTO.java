@@ -3,6 +3,7 @@ package com.soongkordan.dothejib.controller.dto;
 import com.soongkordan.dothejib.domain.Category;
 import com.soongkordan.dothejib.domain.Family;
 import com.soongkordan.dothejib.domain.FamilyMember;
+import com.soongkordan.dothejib.domain.Todo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +48,7 @@ public class TodoDTO {
     }
 
     @Getter @Setter
-    public static class modifyRequest{
+    public static class ModifyRequest{
         private Long personInChargeId;
         private String title;
         private String content;
@@ -58,7 +59,7 @@ public class TodoDTO {
 
     @Getter @Setter
     @AllArgsConstructor
-    public static class getTodoInfoResponse{
+    public static class TodoInfoResponse{
         private Long id; //투두 id
         private Long publisherId; //발급자
         private Long personInChargeId; //담당자
@@ -67,5 +68,17 @@ public class TodoDTO {
         private Long categoryId; //카테고리
         private int difficulty; //노동강도
         private LocalDateTime completedAt; //성취시간
+
+        public static TodoInfoResponse of(Todo todo){
+            return new TodoInfoResponse(
+                    todo.getId(),todo.getPublisher().getId(),todo.getPersonInCharge().getId(), todo.getTitle(),
+            todo.getContent(),todo.getCategory().getId(),todo.getDifficulty(),todo.getCompletedAt());
+        }
+    }
+
+    @Getter @Setter
+    @AllArgsConstructor
+    public static class IdResponse{
+        private Long id;
     }
 }
