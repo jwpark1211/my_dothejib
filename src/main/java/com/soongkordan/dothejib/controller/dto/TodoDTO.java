@@ -41,7 +41,7 @@ public class TodoDTO {
     }
 
     @Getter @Setter
-    public static class getTodoRequest{
+    public static class EndAtRequest{
         @NotNull
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate endAt;

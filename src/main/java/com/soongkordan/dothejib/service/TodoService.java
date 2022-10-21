@@ -92,20 +92,20 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
 
-    public List<TodoInfoResponse> getTodoInfoWithFamilyIdAndEndAt(Long familyId, LocalDate endAt){
+    public List<TodoInfoResponse> getTodoInfoWithFamilyIdAndEndAt(Long familyId, EndAtRequest request){
         Family family = familyRepository.findById(familyId)
                 .orElseThrow(()->new IllegalArgumentException("가족 정보가 없습니다."));
-        return todoRepository.findByFamilyIdAndEndAt(familyId,endAt).stream()
+        return todoRepository.findByFamilyIdAndEndAt(familyId,request.getEndAt()).stream()
                 .map(TodoInfoResponse::of)
                 .collect(Collectors.toList());
     }
 
     public List<TodoInfoResponse> getTodoInfoWithPersonInChargeIdAndEndAt(
-            Long personInChargeId, LocalDate endAt
+            Long personInChargeId, EndAtRequest request
     ){
         FamilyMember personInCharge = familyMemberRepository.findById(personInChargeId)
                 .orElseThrow(()-> new IllegalArgumentException("담당자 정보가 없습니다."));
-        return todoRepository.findByPersonInChargeIdAndEndAt(personInChargeId,endAt).stream()
+        return todoRepository.findByPersonInChargeIdAndEndAt(personInChargeId,request.getEndAt()).stream()
                 .map(TodoInfoResponse::of)
                 .collect(Collectors.toList());
     }
@@ -120,6 +120,13 @@ public class TodoService {
                 .orElseThrow(()-> new IllegalArgumentException("담당자 정보가 없습니다."));
         todo.update(personInCharge,request.getTitle(),category,request.getContent(),
                 request.getDifficulty(),request.getEndAt());
+    }
+
+    @Transactional
+    public void deleteTodo(Long todoId){
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(()-> new IllegalArgumentException("할 일 정보가 없습니다."));
+        todoRepository.delete(todo);
     }
 
     @Transactional
