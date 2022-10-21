@@ -1,15 +1,15 @@
 package com.soongkordan.dothejib;
 
-import com.soongkordan.dothejib.domain.Family;
-import com.soongkordan.dothejib.domain.FamilyMember;
-import com.soongkordan.dothejib.domain.Member;
+import com.soongkordan.dothejib.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.concurrent.Flow;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +30,8 @@ public class InitDB {
         private final EntityManager em;
 
         public void dbInit(){
-
+            System.out.println("<<<<<<<<<<<  INITIALIZE DATABASE  >>>>>>>>>>>>" );
+            System.out.println();
             System.out.println("====  INITIALIZE MEMBER DATABASE  ====" );
             Member member1 = createMember("test1@gmail.com","password");
             Member member2 = createMember("test2@gmail.com","password");
@@ -62,6 +63,38 @@ public class InitDB {
             em.persist(familyMember4);
             em.persist(familyMember5);
             em.persist(familyMember6);
+
+            System.out.println("====  INITIALIZE CATEGORY DATABASE  ====");
+            Category category1 = createCategory(family1,"category1","img","desc");
+            Category category2 = createCategory(family1,"category2","img","desc");
+            Category category3 = createCategory(family2,"category3","img","desc");
+            Category category4 = createCategory(family2,"category4","img","desc");
+            em.persist(category1);
+            em.persist(category2);
+            em.persist(category3);
+            em.persist(category4);
+
+            System.out.println("====  INITIALIZE TODO DATABASE  ====");
+            LocalDate date1 = LocalDate.of(2022,6,8);
+            LocalDate date2 = LocalDate.of(2021,3,7);
+            Todo todo1 = createTodo("title1",family1,category1,familyMember1,familyMember2,date1,"content",2);
+            Todo todo2 = createTodo("title2",family1,category1,familyMember3,familyMember2,date1,"content",3);
+            Todo todo3 = createTodo("title3",family1,category2,familyMember1,familyMember3,date2,"content",2);
+            Todo todo4 = createTodo("title4",family1,category2,familyMember2,familyMember2,date2,"content",7);
+            Todo todo5 = createTodo("title5",family2,category3,familyMember4,familyMember4,date1,"content",8);
+            Todo todo6 = createTodo("title6",family2,category3,familyMember5,familyMember4,date1,"content",8);
+            Todo todo7 = createTodo("title7",family2,category4,familyMember4,familyMember4,date2,"content",9);
+            Todo todo8 = createTodo("title8",family2,category4,familyMember6,familyMember5,date2,"content",5);
+            em.persist(todo1);
+            em.persist(todo2);
+            em.persist(todo3);
+            em.persist(todo4);
+            em.persist(todo5);
+            em.persist(todo6);
+            em.persist(todo7);
+            em.persist(todo8);
+
+            System.out.println("<<<<<<<<<<<  END INITIALIZE DATABASE  >>>>>>>>>>>>" );
         }
 
         private Member createMember( String email, String password){
@@ -83,6 +116,35 @@ public class InitDB {
                     .family(family)
                     .name(name)
                     .profileImg(profileImg)
+                    .build();
+        }
+
+        private Category createCategory(
+                Family family, String name,
+                String profileImg, String description
+        ){
+            return Category.builder()
+                    .family(family)
+                    .name(name)
+                    .profileImg(profileImg)
+                    .description(description)
+                    .build();
+        }
+
+        private Todo createTodo(
+                String title, Family family, Category category,
+                FamilyMember publisher, FamilyMember personInCharge,
+                LocalDate endAt, String content, int difficulty
+        ){
+            return Todo.builder()
+                    .title(title)
+                    .family(family)
+                    .category(category)
+                    .publisher(publisher)
+                    .personInCharge(personInCharge)
+                    .endAt(endAt)
+                    .content(content)
+                    .difficulty(difficulty)
                     .build();
         }
     }
