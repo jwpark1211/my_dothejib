@@ -1,14 +1,18 @@
 package com.soongkordan.dothejib.service;
 
+import com.soongkordan.dothejib.controller.dto.CategoryDTO;
 import com.soongkordan.dothejib.domain.Category;
 import com.soongkordan.dothejib.domain.Family;
+import com.soongkordan.dothejib.repository.FamilyRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.soongkordan.dothejib.controller.dto.CategoryDTO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -18,57 +22,42 @@ public class CategoryServiceTest {
     @Autowired
     CategoryService categoryService;
     @Autowired
-    FamilyService familyService;
+    FamilyRepository familyRepository;
+
+    Family family1 = Family.builder().name("family1").createdAt(LocalDateTime.now()).build();
+    Family family2 = Family.builder().name("family2").createdAt(LocalDateTime.now()).build();
 
     @Test
-    public void save_and_findOne() {
-        // given
-        Family family = getFamily("testFam");
-
-        Category category = Category.builder()
-                .family(family)
-                .profileImg("")
-                .description("desc")
-                .name("some category")
-                .build();
-
-        // when
-        categoryService.save(category);
-
-        // then
-        assertEquals(categoryService.findOne(category.getId()).get(), category);
+    void saveAndGetOneTodo(){
+        //given & when
+        IdResponse category1 = getCategory(family1,"categoryName1");
+        //then
+        assertEquals("categoryName1",categoryService.getCategoryInfoWithId(category1.getId()));
     }
 
     @Test
-    public void findByFamilyId() {
-        // given
-        Family family = getFamily("testFam");
-        Category category1 = getCategory(family, "category1");
-        Category category2 = getCategory(family, "category2");
-        Category category3 = getCategory(family, "category3");
-        Category category4 = getCategory(family, "category4");
+    void getCategoryInfoWithFamilyId(){
+        //given
+        IdResponse category1 = getCategory(family1,"categoryName1");
+        IdResponse category2 = getCategory(family1,"categoryName1");
+        IdResponse category3 = getCategory(family2,"categoryName1");
 
-        // when
-        List<Category> categories = categoryService.findByFamilyId(family.getId());
+        //when
+        List<CategoryInfoResponse> response = categoryService.getCategoryInfoWithFamilyId(family1.getId());
 
-        // then
-        assertEquals(categories.size(), 4);
+        //then
+        assertEquals(2,response.size());
     }
 
-    private Category getCategory(Family family, String name){
-        Category category = Category.builder()
-                .family(family)
-                .name(name)
-                .profileImg("")
-                .description("desc")
-                .build();
-        categoryService.save(category);
-        return category;
-    }
+    private IdResponse getCategory(
+            Family family, String name
+    ) {
+        familyRepository.save(family);
+        SaveRequest request = new SaveRequest();
+        request.setName(name);
+        request.setProfileImg("img");
+        request.setDescription("desc");
 
-    private Family getFamily(String name) {
-        Family family = Family.builder().name(name).build();
-        familyService.save(family);
-        return family;
+        return categoryService.saveCategory(request,family.getId());
     }
 }
