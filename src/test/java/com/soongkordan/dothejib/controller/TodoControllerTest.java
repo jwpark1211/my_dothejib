@@ -39,10 +39,6 @@ public class TodoControllerTest {
     private MockMvc mvc;
 
     @MockBean private TodoService todoService;
-    @MockBean private FamilyMemberService familyMemberService;
-    @MockBean private FamilyService familyService;
-    @MockBean private MemberService memberService;
-    @MockBean private CategoryService categoryService;
 
     @Autowired private ObjectMapper objectMapper;
 
