@@ -37,6 +37,13 @@ public class MemberController {
                         memberService.getMemberInfoWithId(id)));
     }
 
+    /*SecurityContext에 있는 유저 정보 조회*/
+    @GetMapping(path = "/me", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?extends BasicResponse> getMyMemberInfo(){
+        return ResponseEntity.ok()
+                .body(new CommonResponse<Response>(memberService.getMyInfo()));
+    }
+
     /*Member 이메일로 단일 조회*/
     @GetMapping(path = "/email/{email}",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findMemberWithEmail(
@@ -48,7 +55,7 @@ public class MemberController {
     }
 
     /*Member 전체 목록 조회*/
-    @GetMapping(path = "/all", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/all"   , produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<? extends BasicResponse> findAllMembers(
     ){
         return ResponseEntity.ok() //return : 200 + memberList(Id/email)

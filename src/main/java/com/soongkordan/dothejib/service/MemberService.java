@@ -3,6 +3,7 @@ package com.soongkordan.dothejib.service;
 import com.soongkordan.dothejib.controller.dto.MemberDTO;
 import com.soongkordan.dothejib.domain.Member;
 import com.soongkordan.dothejib.repository.MemberRepository;
+import com.soongkordan.dothejib.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,12 @@ public class MemberService {
         return memberRepository.findByEmail(email)
                 .map(Response::of)
                 .orElseThrow(() -> new IllegalArgumentException("유저 정보가 없습니다."));
+    }
+
+    public Response getMyInfo() {
+        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+                .map(Response::of)
+                .orElseThrow(()->new RuntimeException("로그인 유저 정보가 없습니다."));
     }
 
     //member Id로 유저 정보 찾아오기
