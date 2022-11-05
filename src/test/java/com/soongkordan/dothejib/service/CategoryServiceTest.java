@@ -7,6 +7,8 @@ import com.soongkordan.dothejib.repository.FamilyRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import static com.soongkordan.dothejib.controller.dto.CategoryDTO.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@WithMockUser(roles = "USER")
 @Transactional
 public class CategoryServiceTest {
 
@@ -32,7 +35,7 @@ public class CategoryServiceTest {
         //given & when
         IdResponse category1 = getCategory(family1,"categoryName1");
         //then
-        assertEquals("categoryName1",categoryService.getCategoryInfoWithId(category1.getId()));
+        assertEquals("categoryName1",categoryService.getCategoryInfoWithId(category1.getId()).getName());
     }
 
     @Test
